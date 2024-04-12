@@ -131,17 +131,13 @@ entries = [
     Entry('Select',           'primary_007mm_select_4x', split=True),
     Entry('Case back',        'secondary_015mm_back', '-Z'),
     Entry('Case cover',       'secondary_015mm_cover'),
-    Entry('Wheel',            'secondary_015mm_wheel', 'X'),
-    Entry('Wheel shaft R',    'secondary_015mm_wheelshaft'),
     Entry('Abxy',             'secondary_007mm_abxy_4x', split=True),
     Entry('Dpad',             'secondary_007mm_dpad_4x', split=True),
     Entry('Home',             'secondary_007mm_home', rotate=True),
     Entry('Thumbstick',       'secondary_007mm_thumbstick', tolerance=True),
     Entry('Hexagon',          'conductive_015mm_hexagon', '-Z', tolerance=True),
-    Entry('Wheel support',    'any_015mm_wheelholder', '-X'),
     Entry('Anchor',           'any_015mm_anchors_2x', '-Z', split=True),
     Entry('Soldering helper', 'any_020mm_solderstand', '-Z', merge=True),
-    Entry('Scrollwheel', None, multiple=True),
 ]
 
 for collection in bpy.data.collections:

@@ -1,5 +1,8 @@
 *.blend1
 backup/
 stl/
+step/
 3mf/
 release/
+.vscode/
+__pycache__/

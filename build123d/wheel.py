@@ -55,6 +55,7 @@ with BuildPart() as wheel:
         with PolarLocations(0, INDENTS):
             add(l.line)
         make_face()
+    # Make 3D.
     extrude(amount=WHEEL_WIDTH)
     # Chamfer.
     edge_list = edges().filter_by(Axis.Z, reverse=True)
@@ -63,7 +64,6 @@ with BuildPart() as wheel:
     with BuildSketch() as s:
         add(core_sketch.sketch)
         offset(amount=CORE_TOLERANCE, kind=Kind.INTERSECTION)
-    # Make 3D.
     extrude(amount=WHEEL_WIDTH, mode=Mode.SUBTRACT)
 
 # Core part.
@@ -107,17 +107,8 @@ with BuildPart() as holder:
     # Make 3D.
     extrude(amount=-HOLDER_WIDTH)
 
-# Show.
-# show_object(wheel)
-# show_object(core)
-# show_object(holder)
 
-# STL export.
-# wheel.part.export_stl('wheel.stl')
-# core.part.export_stl('wheel_core.stl')
-# holder.part.export_stl('wheel_holder.stl')
-
-# STEP export.
-# wheel.part.export_step('wheel.step')
-# core.part.export_step('wheel_core.step')
-# holder.part.export_step('wheel_holder.step')
+if __name__ in ['__main__', 'temp']:
+    show_object(wheel)
+    show_object(core)
+    show_object(holder)

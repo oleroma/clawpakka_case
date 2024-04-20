@@ -6,7 +6,7 @@ BLENDER := 'blender'
 
 default: release
 
-release: clean stl
+release: stl
 	mkdir -p release/
 	zip -u release/blender.zip blender/*.blend
 	zip -u release/stl.zip stl/*.stl stl/**/*.stl
@@ -19,10 +19,11 @@ clean:
 	mkdir -p stl
 	mkdir -p step
 
-stl: clean
+stl: clean blend b123d
+
+blend:
 	$(BLENDER) blender/case_front.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/case_back.blend --background --python scripts/export_blender.py
-	$(BLENDER) blender/trigger_R1.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/trigger_R2.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/trigger_R4.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/anchor.blend --background --python scripts/export_blender.py
@@ -35,4 +36,6 @@ stl: clean
 	$(BLENDER) blender/case_cover.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/hexagon.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/soldering_stand.blend --background --python scripts/export_blender.py
+
+b123d:
 	python3 scripts/export_b123d.py

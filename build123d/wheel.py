@@ -35,13 +35,13 @@ CENTER = (0, 0)
 PRINTBED_PLANE = Plane.XZ.offset(LEFT_AXLE_DIAMETER / 2)
 
 # Core sketch.
-with BuildSketch(Plane.XZ) as core_sketch:
+with BuildSketch() as core_sketch:
     Circle(CORE_RADIUS)
     split(bisect_by=PRINTBED_PLANE, keep=Keep.BOTTOM)
 
 # Wheel part.
 with BuildPart() as wheel:
-    with BuildSketch(Plane.XZ) as s:
+    with BuildSketch() as s:
         # Create a single indent chevron.
         with BuildLine(mode=Mode.PRIVATE) as l:
             # Create indent line.
@@ -58,10 +58,10 @@ with BuildPart() as wheel:
     # Make 3D.
     extrude(amount=WHEEL_WIDTH)
     # Chamfer.
-    edge_list = edges().filter_by(Axis.Y, reverse=True)
+    edge_list = edges().filter_by(Axis.Z, reverse=True)
     chamfer(edge_list, WHEEL_CHAMFER)
     # Remove the core.
-    with BuildSketch(Plane.XZ) as s:
+    with BuildSketch() as s:
         add(core_sketch.sketch)
         offset(amount=CORE_TOLERANCE, kind=Kind.INTERSECTION)
     extrude(amount=WHEEL_WIDTH, mode=Mode.SUBTRACT)
@@ -69,27 +69,27 @@ with BuildPart() as wheel:
 # Core part.
 with BuildPart() as core:
     # Main core.
-    with BuildSketch(Plane.XZ):
+    with BuildSketch():
         add(core_sketch.sketch)
     extrude(amount=WHEEL_WIDTH)
     # Right axle (hexagon).
-    with BuildSketch(Plane.XZ.offset(WHEEL_WIDTH)) as s:
+    with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)) as s:
         RegularPolygon(HEX_DIAMETER / 2, 6)
     extrude(amount=HEX_LEN)
     # Right padding.
-    with BuildSketch(Plane.XZ.offset(WHEEL_WIDTH)) as s:
+    with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)) as s:
         Circle(RIGHT_PADDING_RADIUS)
         split(bisect_by=PRINTBED_PLANE, keep=Keep.BOTTOM)
     extrude(amount=RIGHT_PADDING_LEN)
     # Left axle.
-    with BuildSketch(Plane.XZ) as s:
+    with BuildSketch(Plane.XY) as s:
         Circle(LEFT_AXLE_DIAMETER / 2)
     # Make 3D.
     extrude(amount=-LEFT_AXLE_LEN)
 
 # Holder part.
 with BuildPart() as holder:
-    with BuildSketch(Plane.XZ) as s:
+    with BuildSketch() as s:
         offset = Location((0, HOLDER_AXLE_OFFSET_FROM_TOP))
         with BuildLine(offset) as l:
             # Create half polygon.

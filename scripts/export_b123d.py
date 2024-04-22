@@ -13,6 +13,6 @@ def export(obj, filename):
     export_step(obj, STEP_DIR + filename + '.step')
 
 # Scroll wheel.
-export(wheel.part.rotate(Axis.X, -90), 'secondary_015mm_wheel')
-export(core.part, 'secondary_007mm_wheel_core')
-export(holder.part.rotate(Axis.X, -90), 'any_015mm_wheel_holder')
+export(wheel.part, 'secondary_015mm_wheel')
+export(core.part.rotate(Axis.X, 90), 'secondary_007mm_wheel_core')
+export(holder.part, 'any_015mm_wheel_holder')

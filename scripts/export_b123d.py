@@ -1,15 +1,18 @@
+from build123d import Axis, Plane, export_stl, export_step
+
+# Import parts.
 import sys
 sys.path.insert(1, './build123d')
 from wheel import wheel, core, holder
-from build123d import Rotation
 
-STLDIR = 'stl/'
-STEPDIR = 'step/'
+STL_DIR = 'stl/'
+STEP_DIR = 'step/'
 
 def export(obj, filename):
-    obj.export_stl(STLDIR + filename + '.stl')
-    obj.export_step(STEPDIR + filename + '.step')
+    export_stl(obj, STL_DIR + filename + '.stl')
+    export_step(obj, STEP_DIR + filename + '.step')
 
-export(wheel.part, 'secondary_015mm_wheel')
-export(Rotation(90, 0, 0) * core.part, 'secondary_007mm_wheel_core')
-export(holder.part, 'any_015mm_wheel_holder')
+# Scroll wheel.
+export(wheel.part.rotate(Axis.X, -90), 'secondary_015mm_wheel')
+export(core.part, 'secondary_007mm_wheel_core')
+export(holder.part.rotate(Axis.X, -90), 'any_015mm_wheel_holder')

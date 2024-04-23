@@ -8,8 +8,8 @@ SHAFT_TOLERANCE = 0.1
 SHAFT_Z = 13
 
 BRIDGE_Z = 9.4
-BRIDGE_RELIEF_Z = 0.9
-BRIDGE_CONTACT_TOLERANCE_Y = 0.3
+BRIDGE_RELIEF_Z = 0.9  # Cut-out to avoid potential 3D-printed overhangs.
+BRIDGE_CONTACT_TOLERANCE_Y = 0.3  # Contact with the button switch.
 
 SLAB_X_0 = 11
 SLAB_X_1 = 17
@@ -69,36 +69,36 @@ SLAB_XZ_POINTS = [
 
 with BuildPart() as internal:
     # Shaft.
-    with BuildSketch() as s:
+    with BuildSketch():
         Circle(SHAFT_RADIUS - SHAFT_TOLERANCE)
     extrude(amount=SHAFT_Z - TOLERANCE_Z)
     # Bridge.
-    with BuildSketch() as s:
-        with BuildLine() as l:
+    with BuildSketch():
+        with BuildLine():
             Polyline(BRIDGE_POINTS)
         make_face()
     extrude(amount=BRIDGE_Z - TOLERANCE_Z)
     # Relief.
     plane = Plane.XY.offset(BRIDGE_Z - TOLERANCE_Z - BRIDGE_RELIEF_Z)
-    with BuildSketch(plane) as s:
-        with BuildLine() as l:
+    with BuildSketch(plane):
+        with BuildLine():
             Polyline(RELIEF_POINTS)
         make_face()
     extrude(amount=BRIDGE_RELIEF_Z, mode=Mode.SUBTRACT)
 
 with BuildPart() as slab:
     # Slab XY.
-    with BuildSketch() as s:
-        with BuildLine() as l:
+    with BuildSketch():
+        with BuildLine():
             Polyline(SLAB_XY_POINTS)
         make_face()
     extrude(amount=SLAB_Z - TOLERANCE_Z)
-    # Slab XZ.
-    with BuildSketch(Plane.XZ) as s:
-        with BuildLine() as l:
+    # Slab XZ (intersects with XY).
+    with BuildSketch(Plane.XZ):
+        with BuildLine():
             Polyline(SLAB_XZ_POINTS)
         make_face()
-    until = max([y for x,y in SLAB_XY_POINTS])  # Further away point in XY.sketch.
+    until = max([y for (x,y) in SLAB_XY_POINTS])  # Further away point in XY.sketch.
     extrude(amount=-until, mode=Mode.INTERSECT)
     # Chamfer.
     edges1 = faces().filter_by(Plane.XZ)[1].edges()  # Touchy face.

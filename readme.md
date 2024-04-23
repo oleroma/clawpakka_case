@@ -73,9 +73,11 @@ Except for the colors (which is up to you how to combine), it is very recommende
 ## Migration to Build123d
 We are in the process of migrating 3D modelling from Blender to [Build123D](https://build123d.readthedocs.io), we decided to make the migration gradually, one part at a time.
 
-The parts that are already ported into Build123D are located in `build123d/` folder.
+The original Blender parts are still located in `blender/` folder.
 
-The export script will create STL for all Blender and Build123d parts, and STEP only for Build123d parts.
+While parts that are already ported into Build123D are located in `build123d/` folder.
+
+The export script will create `STL` for all Blender and Build123D parts, and `STEP` only for Build123d parts.
 
 
 ## Developer commands

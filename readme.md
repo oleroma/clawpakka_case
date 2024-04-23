@@ -42,7 +42,7 @@ To use Git with this project it is required to install Git [Large File Storage](
 - `button_home.blend` - Home button.
 
 ### Triggers
-- `trigger_R1.blend` - L1 and R1 shoulder triggers.
+- `trigger_R1.py (build123d)` - L1 and R1 shoulder triggers.
 - `trigger_R2.blend` - L2 and R2 triggers.
 - `trigger_R4.blend` - L4 and R4 triggers.
 

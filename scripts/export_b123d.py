@@ -5,6 +5,7 @@ import sys
 sys.path.insert(1, './build123d')
 from wheel import wheel, core, holder
 from trigger_r1 import trigger_r1
+from button_abxy import button_abxy
 
 STL_DIR = 'stl/'
 STEP_DIR = 'step/'
@@ -21,3 +22,6 @@ export(holder.part, 'any_015mm_wheel_holder')
 # Trigger L1/R1.
 export(trigger_r1.part, 'primary_015mm_trigger_R1')
 export(trigger_r1.part.mirror(Plane.YZ), 'primary_015mm_trigger_L1')
+
+# Button ABXY.
+export(button_abxy.part, button_abxy_2.part, button_abxy_3.part, button_abxy_4.part, 'secondary_007mm_button_abxy_4x')

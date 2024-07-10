@@ -1,10 +1,13 @@
 from build123d import (
     BuildPart, BuildSketch, BuildLine, Box, Plane, Polyline, Rectangle, Location, Locations,
     Axis, Rot, Mode, Align, Until,
-    mirror, make_face, extrude, fillet, chamfer, split, faces, add
-    )
+    mirror, make_face, extrude, fillet, chamfer, split, faces, add)
 
-from ocp_vscode import show_object
+try:
+    from ocp_vscode import show_object
+except ModuleNotFoundError:
+    pass
+
 
 # bottom box
 COVER_BOTTOM_WIDTH = 62
@@ -76,6 +79,7 @@ with BuildPart() as cover:
     with Locations(loc):
         add(box_pt.part)
 
+    # Create fillets
     edges = cover.part.edges().filter_by(Axis.X).group_by(Axis.Y)[2][0]
     fillet(edges, FILLET_SIZE)
     edges = cover.part.edges().filter_by(Axis.X).group_by(Axis.Y)[1][1]

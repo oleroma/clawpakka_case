@@ -131,7 +131,6 @@ entries = [
     Entry('Select',           'primary_007mm_select_4x', split=True),
     Entry('Case back',        'secondary_015mm_back', '-Z'),
     Entry('Case cover',       'secondary_015mm_cover'),
-    Entry('Abxy',             'secondary_007mm_abxy_4x', split=True),
     Entry('Dpad',             'secondary_007mm_dpad_4x', split=True),
     Entry('Home',             'secondary_007mm_home', rotate=True),
     Entry('Thumbstick',       'secondary_007mm_thumbstick', tolerance=True),

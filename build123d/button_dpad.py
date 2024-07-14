@@ -1,0 +1,58 @@
+from build123d import (
+    BuildPart, BuildSketch, BuildLine, Rectangle, Circle, Mode, Plane, Axis, Polyline,
+    chamfer, extrude, loft, mirror, make_face)
+
+try:
+    from ocp_vscode import show_object
+except ModuleNotFoundError:
+    pass
+
+TOTAL_BUTTON_HEIGHT = 18.3
+
+LOWER_BUTTON_HEIGHT = 2.4
+LOWER_BUTTON_WIDTH = 9.6
+LOWER_BUTTON_TIP = 11.54
+LOWER_BUTTON_MID = 6.74
+
+TOP_BUTTON_HEIGHT = 13.9
+TOP_BUTTON_WIDTH = 7.6
+TOP_BUTTON_TIP = 10.54
+TOP_BUTTON_MID = 6.74
+
+MID_BUTTON_HEIGHT = TOTAL_BUTTON_HEIGHT - TOP_BUTTON_HEIGHT - LOWER_BUTTON_HEIGHT
+
+TOP_CHAMFER_SIZE = 0.5
+SIDE_FILLET_SIZE = 1
+
+##---
+
+
+with BuildPart() as button_dpad:
+    with BuildSketch(Plane.XY.offset(LOWER_BUTTON_HEIGHT)) as bottom_sk:
+        with BuildLine():
+            Polyline((0,0), (LOWER_BUTTON_WIDTH / 2, 0), (LOWER_BUTTON_WIDTH / 2, LOWER_BUTTON_MID), (0, LOWER_BUTTON_TIP))
+            mirror(about=Plane.YZ)
+        make_face()
+
+    with BuildSketch(Plane.XY.offset(LOWER_BUTTON_HEIGHT + MID_BUTTON_HEIGHT)) as top_sk:
+        with BuildLine():
+            Polyline((0,0), (TOP_BUTTON_WIDTH / 2, 0), (TOP_BUTTON_WIDTH / 2, TOP_BUTTON_MID), (0, TOP_BUTTON_TIP))
+            mirror(about=Plane.YZ)
+        make_face()
+
+
+
+    # Mid section first
+    loft()
+    
+    # Extrude top and bottom
+    extrude(bottom_sk.sketch, amount=-LOWER_BUTTON_HEIGHT)
+    extrude(top_sk.sketch, amount=TOP_BUTTON_HEIGHT)
+
+    # Chamfer top
+    edges = button_dpad.part.edges().group_by(Axis.Z)[-1]
+    chamfer(edges, TOP_CHAMFER_SIZE)
+
+
+if __name__ in ['__main__', 'temp']:
+    show_object(button_dpad)

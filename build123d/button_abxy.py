@@ -1,5 +1,5 @@
 from build123d import (
-    BuildPart, BuildSketch, Rectangle, Circle, Mode, Plane, Axis, Location, Compound,
+    BuildPart, BuildSketch, Rectangle, Circle, Mode, Plane, Axis,
     chamfer, extrude, loft)
 
 try:
@@ -7,12 +7,14 @@ try:
 except ModuleNotFoundError:
     pass
 
+TOTAL_BUTTON_HEIGHT = 18.3
+
 LOWER_BUTTON_HEIGHT = 2.4
 LOWER_BUTTON_RAD = 5.8
 LOWER_BUTTON_WIDTH = 9.6
 
 TOP_BUTTON_HEIGHT = 13.9
-MID_BUTTON_HEIGHT = 18.3 - TOP_BUTTON_HEIGHT - LOWER_BUTTON_HEIGHT
+MID_BUTTON_HEIGHT = TOTAL_BUTTON_HEIGHT - TOP_BUTTON_HEIGHT - LOWER_BUTTON_HEIGHT
 MID_BUTTON_RAD = 4.8
 
 CHAMFER_SIZE = 0.5

@@ -36,7 +36,7 @@ FILLET_SIZE = 2
 
 with BuildPart() as cover:
     # Bottom box
-    with BuildSketch() as bottom_sk:
+    with BuildSketch():
         Rectangle(COVER_BOTTOM_WIDTH, COVER_BOTTOM_DEPTH)
     extrude(amount=COVER_BOTTOM_HEIGHT)
     split(bisect_by=Plane.YZ)  # keep only half, since everything will be mirrored in the end

@@ -47,8 +47,7 @@ with BuildPart() as button_dpad:
             Polyline(TOP_OUTLINE_PTS)
             mirror(about=Plane.YZ)
         make_face()
-##        fillet(top_outline.vertices(), SIDE_FILLET_SIZE) # not working due to https://github.com/gumyr/build123d/issues/314
-        fillet(top_sk.sketch_local.vertices().sort_by(Axis.X), SIDE_FILLET_SIZE)
+        fillet(top_sk.vertices(), SIDE_FILLET_SIZE)
 
     # Mid section first
     loft()

@@ -6,6 +6,7 @@ sys.path.insert(1, './build123d')
 from wheel import wheel, core, holder
 from trigger_r1 import trigger_r1
 from cover import cover
+from button_dpad import button_dpad
 
 STL_DIR = 'stl/'
 STEP_DIR = 'step/'
@@ -25,3 +26,6 @@ export(trigger_r1.part.mirror(Plane.YZ), 'primary_015mm_trigger_L1')
 
 # Battery Cover.
 export(cover.part, 'secondary_015mm_cover')
+
+# Button D-Pad.
+export(button_dpad.part, 'secondary_007mm_dpad_4x')

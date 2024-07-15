@@ -1,6 +1,6 @@
 from build123d import (
-    BuildPart, BuildSketch, BuildLine, Rectangle, Circle, Mode, Plane, Axis, Polyline,
-    chamfer, extrude, loft, mirror, make_face)
+    BuildPart, BuildSketch, BuildLine, Plane, Axis, Polyline,
+    chamfer, extrude, loft, mirror, make_face, fillet)
 
 try:
     from ocp_vscode import show_object
@@ -14,33 +14,41 @@ LOWER_BUTTON_WIDTH = 9.6
 LOWER_BUTTON_TIP = 11.54
 LOWER_BUTTON_MID = 6.74
 
+BOTTOM_OUTLINE_PTS = ((0,0), (LOWER_BUTTON_WIDTH / 2, 0),
+    (LOWER_BUTTON_WIDTH / 2,
+    LOWER_BUTTON_MID),
+    (0, LOWER_BUTTON_TIP)) # Gets mirrored
+
 TOP_BUTTON_HEIGHT = 13.9
 TOP_BUTTON_WIDTH = 7.6
 TOP_BUTTON_TIP = 10.54
 TOP_BUTTON_MID = 6.74
+
+TOP_OUTLINE_PTS = ((0,0), (TOP_BUTTON_WIDTH / 2, 0),
+    (TOP_BUTTON_WIDTH / 2,
+    TOP_BUTTON_MID),
+    (0, TOP_BUTTON_TIP))
 
 MID_BUTTON_HEIGHT = TOTAL_BUTTON_HEIGHT - TOP_BUTTON_HEIGHT - LOWER_BUTTON_HEIGHT
 
 TOP_CHAMFER_SIZE = 0.5
 SIDE_FILLET_SIZE = 1
 
-##---
-
 
 with BuildPart() as button_dpad:
     with BuildSketch(Plane.XY.offset(LOWER_BUTTON_HEIGHT)) as bottom_sk:
         with BuildLine():
-            Polyline((0,0), (LOWER_BUTTON_WIDTH / 2, 0), (LOWER_BUTTON_WIDTH / 2, LOWER_BUTTON_MID), (0, LOWER_BUTTON_TIP))
+            Polyline(BOTTOM_OUTLINE_PTS)
             mirror(about=Plane.YZ)
         make_face()
 
     with BuildSketch(Plane.XY.offset(LOWER_BUTTON_HEIGHT + MID_BUTTON_HEIGHT)) as top_sk:
-        with BuildLine():
-            Polyline((0,0), (TOP_BUTTON_WIDTH / 2, 0), (TOP_BUTTON_WIDTH / 2, TOP_BUTTON_MID), (0, TOP_BUTTON_TIP))
+        with BuildLine() as top_outline:
+            Polyline(TOP_OUTLINE_PTS)
             mirror(about=Plane.YZ)
         make_face()
-
-
+##        fillet(top_outline.vertices(), SIDE_FILLET_SIZE) # not working due to https://github.com/gumyr/build123d/issues/314
+        fillet(top_sk.sketch_local.vertices().sort_by(Axis.X), SIDE_FILLET_SIZE)
 
     # Mid section first
     loft()
@@ -56,3 +64,4 @@ with BuildPart() as button_dpad:
 
 if __name__ in ['__main__', 'temp']:
     show_object(button_dpad)
+    print(f"Volume: {button_dpad.part.volume}")

@@ -36,7 +36,7 @@ TRAPEZ_PTS = ((0, 0),
 
 
 with BuildPart() as hex:
-    with BuildSketch() as top_sk:
+    with BuildSketch():
         with BuildLine() as top_outline:
            line = Polyline(HEX_PTS)
            mirror(top_outline.line, about=Plane.YZ)
@@ -50,7 +50,7 @@ with BuildPart() as hex:
 
     with BuildPart(mode=Mode.PRIVATE) as bottom_pt:
         plane = Plane.XZ.offset(-TRAPEZ_WIDTH / 2)
-        with BuildSketch(plane) as bottom_sk:
+        with BuildSketch(plane):
             with BuildLine() as bottom_outline:
                 line = Polyline(TRAPEZ_PTS)
                 mirror(bottom_outline.line, about=Plane.YZ)

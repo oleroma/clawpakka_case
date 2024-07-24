@@ -58,7 +58,6 @@ with BuildPart() as cover:
             Rectangle(TAB_WIDTH, TAB_HEIGHT, align=(Align.CENTER, Align.MAX)) # align top edge to y-axis
         extrude(until=Until.PREVIOUS)
 
-
     # Rear box
     with BuildPart(mode=Mode.PRIVATE) as box_pt: # construct private box on the origin and transform later
         with BuildSketch() as s:
@@ -94,3 +93,5 @@ if __name__ in ['__main__', 'temp']:
     if __name__ == '__main__':
         from ocp_vscode import show_object
         show_object(cover)
+
+    print(f"Volume: {cover.part.volume}")

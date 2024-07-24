@@ -51,7 +51,7 @@ with BuildPart() as button_dpad:
 
     # Mid section first
     loft()
-    
+
     # Extrude top and bottom
     extrude(bottom_sk.sketch, amount=-LOWER_BUTTON_HEIGHT)
     extrude(top_sk.sketch, amount=TOP_BUTTON_HEIGHT)
@@ -61,6 +61,12 @@ with BuildPart() as button_dpad:
     chamfer(edges, TOP_CHAMFER_SIZE)
 
 
+# __main__ => show in VSCode
+# temp     => show in CQEditor
 if __name__ in ['__main__', 'temp']:
-    show_object(button_dpad)
+    if __name__ == '__main__':
+        from ocp_vscode import show_object
+        show_object(button_dpad)
+
     print(f"Volume: {button_dpad.part.volume}")
+

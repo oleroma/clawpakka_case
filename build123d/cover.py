@@ -57,7 +57,7 @@ with BuildPart() as cover:
         with BuildSketch(plane.rotated((TAB_ANGLE, 0, 0))): # create sketch on plane rotated about local y-axis
             Rectangle(TAB_WIDTH, TAB_HEIGHT, align=(Align.CENTER, Align.MAX)) # align top edge to y-axis
         extrude(until=Until.PREVIOUS)
-    
+
 
     # Rear box
     with BuildPart(mode=Mode.PRIVATE) as box_pt: # construct private box on the origin and transform later
@@ -88,5 +88,9 @@ with BuildPart() as cover:
     mirror(about=Plane.YZ)
 
 
+# __main__ => show in VSCode
+# temp     => show in CQEditor
 if __name__ in ['__main__', 'temp']:
-    show_object(cover)
+    if __name__ == '__main__':
+        from ocp_vscode import show_object
+        show_object(cover)

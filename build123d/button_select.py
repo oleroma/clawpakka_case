@@ -30,7 +30,7 @@ with BuildPart() as button_select:
     with BuildSketch(Plane.XY.offset(LOWER_BUTTON_HEIGHT + MID_BUTTON_HEIGHT)) as top_sk:
         Rectangle(TOP_BUTTON_WIDTH, BUTTON_DEPTH)
         fillet(top_sk.vertices(), SIDE_FILLET_SIZE)
-    
+
     # Mid section first
     loft()
 
@@ -43,6 +43,11 @@ with BuildPart() as button_select:
     chamfer(edges, TOP_CHAMFER_SIZE)
 
 
+# __main__ => show in VSCode
+# temp     => show in CQEditor
 if __name__ in ['__main__', 'temp']:
-    show_object(button_select)
+    if __name__ == '__main__':
+        from ocp_vscode import show_object
+        show_object(button_select)
+
     print(f"Volume: {button_select.part.volume}")

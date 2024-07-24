@@ -24,13 +24,13 @@ with BuildPart() as button_abxy:
     with BuildSketch(Plane.XY.offset(LOWER_BUTTON_HEIGHT)) as bottom_sk:
         Circle(LOWER_BUTTON_RAD)
         Rectangle(2 * LOWER_BUTTON_RAD, LOWER_BUTTON_WIDTH, mode=Mode.INTERSECT)
-    
+
     with BuildSketch(Plane.XY.offset(LOWER_BUTTON_HEIGHT + MID_BUTTON_HEIGHT)) as top_sk:
         Circle(MID_BUTTON_RAD)
 
     # Mid section first
     loft()
-    
+
     # Extrude top and bottom
     extrude(bottom_sk.sketch, amount=-LOWER_BUTTON_HEIGHT)
     extrude(top_sk.sketch, amount=TOP_BUTTON_HEIGHT)
@@ -40,5 +40,9 @@ with BuildPart() as button_abxy:
     chamfer(edges, CHAMFER_SIZE)
 
 
+# __main__ => show in VSCode
+# temp     => show in CQEditor
 if __name__ in ['__main__', 'temp']:
-    show_object(button_abxy)
+    if __name__ == '__main__':
+        from ocp_vscode import show_object
+        show_object(button_abxy)

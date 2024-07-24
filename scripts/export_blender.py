@@ -129,7 +129,6 @@ entries = [
     Entry('R4',               'primary_015mm_trigger_R4', '-Y', '-Z', split=True, mirror=True),
     Entry('DHat',             'primary_015mm_dhat'),
     Entry('Case back',        'secondary_015mm_back', '-Z'),
-    Entry('Case cover',       'secondary_015mm_cover'),
     Entry('Abxy',             'secondary_007mm_abxy_4x', split=True),
     Entry('Dpad',             'secondary_007mm_dpad_4x', split=True),
     Entry('Home',             'secondary_007mm_home', rotate=True),

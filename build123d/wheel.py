@@ -5,11 +5,6 @@ from build123d import (
     add, chamfer, edges, extrude, make_face, mirror, offset, split
 )
 
-try:
-    from ocp_vscode import show_object
-except ModuleNotFoundError:
-    pass
-
 # Wheel
 WHEEL_INDENTS = 24
 WHEEL_RADIUS_OUTER = 10.75

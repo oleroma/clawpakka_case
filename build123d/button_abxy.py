@@ -45,4 +45,4 @@ with BuildPart() as button_abxy:
 if __name__ in ['__main__', 'temp']:
     if __name__ == '__main__':
         from ocp_vscode import show_object
-        show_object(button_abxy)
+    show_object(button_abxy)

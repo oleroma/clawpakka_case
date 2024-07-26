@@ -3,11 +3,6 @@ from build123d import (
     Axis, Rot, Mode, Align, Until,
     mirror, make_face, extrude, fillet, chamfer, split, faces, add)
 
-try:
-    from ocp_vscode import show_object
-except ModuleNotFoundError:
-    pass
-
 
 # bottom box
 COVER_BOTTOM_WIDTH = 62
@@ -92,6 +87,7 @@ with BuildPart() as cover:
 if __name__ in ['__main__', 'temp']:
     if __name__ == '__main__':
         from ocp_vscode import show_object
-        show_object(cover)
+
+    show_object(cover)
 
     print(f"Volume: {cover.part.volume}")

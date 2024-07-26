@@ -43,6 +43,7 @@ with BuildPart() as button_select:
 if __name__ in ['__main__', 'temp']:
     if __name__ == '__main__':
         from ocp_vscode import show_object
-        show_object(button_select)
+
+    show_object(button_select)
 
     print(f"Volume: {button_select.part.volume}")

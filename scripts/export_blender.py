@@ -128,7 +128,6 @@ entries = [
     Entry('R2',               'primary_015mm_trigger_R2', '-Z', split=True, mirror=True),
     Entry('R4',               'primary_015mm_trigger_R4', '-Y', '-Z', split=True, mirror=True),
     Entry('DHat',             'primary_015mm_dhat'),
-    Entry('Select',           'primary_007mm_select_4x', split=True),
     Entry('Case back',        'secondary_015mm_back', '-Z'),
     Entry('Home',             'secondary_007mm_home', rotate=True),
     Entry('Thumbstick',       'secondary_007mm_thumbstick', tolerance=True),

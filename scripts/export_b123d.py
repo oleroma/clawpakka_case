@@ -17,23 +17,19 @@ def export(obj, filename):
     export_stl(obj, STL_DIR + filename + '.stl')
     export_step(obj, STEP_DIR + filename + '.step')
 
-# Scroll wheel.
-export(wheel.part, 'secondary_015mm_wheel')
-export(core.part.rotate(Axis.X, 90), 'secondary_007mm_wheel_core')
-export(holder.part, 'any_015mm_wheel_holder')
+# Buttons.
+export(button_abxy.part, 'secondary_007mm_abxy_4x')
+export(button_dpad.part, 'secondary_007mm_dpad_4x')
+export(button_select.part, 'primary_007mm_select_4x')
 
 # Trigger L1/R1.
 export(trigger_r1.part, 'primary_015mm_trigger_R1')
 export(trigger_r1.part.mirror(Plane.YZ), 'primary_015mm_trigger_L1')
 
-# Button Select.
-export(button_select.part, 'primary_007mm_select_4x')
-
-# Button D-Pad.
-export(button_dpad.part, 'secondary_007mm_dpad_4x')
+# Scroll wheel.
+export(wheel.part, 'secondary_015mm_wheel')
+export(core.part.rotate(Axis.X, 90), 'secondary_007mm_wheel_core')
+export(holder.part, 'any_015mm_wheel_holder')
 
 # Battery Cover.
 export(cover.part, 'secondary_015mm_cover')
-
-# Button ABXY.
-export(button_abxy.part, 'secondary_007mm_button_abxy_4x')

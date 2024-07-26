@@ -2,10 +2,6 @@ from build123d import (
     BuildPart, BuildSketch, BuildLine, Plane, Axis, Polyline,
     chamfer, extrude, loft, mirror, make_face, fillet)
 
-try:
-    from ocp_vscode import show_object
-except ModuleNotFoundError:
-    pass
 
 TOTAL_BUTTON_HEIGHT = 18.3
 

@@ -28,7 +28,6 @@ blend:
 	$(BLENDER) blender/trigger_R4.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/anchor.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/dhat.blend --background --python scripts/export_blender.py
-	$(BLENDER) blender/button_dpad.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/button_select.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/thumbstick.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/button_home.blend --background --python scripts/export_blender.py

@@ -31,7 +31,6 @@ blend:
 	$(BLENDER) blender/button_select.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/thumbstick.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/button_home.blend --background --python scripts/export_blender.py
-	$(BLENDER) blender/case_cover.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/hexagon.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/soldering_stand.blend --background --python scripts/export_blender.py
 

@@ -2,10 +2,6 @@ from build123d import (
     BuildPart, BuildSketch, Rectangle, Circle, Mode, Plane, Axis,
     chamfer, extrude, loft)
 
-try:
-    from ocp_vscode import show_object
-except ModuleNotFoundError:
-    pass
 
 TOTAL_BUTTON_HEIGHT = 18.3
 
@@ -45,4 +41,5 @@ with BuildPart() as button_abxy:
 if __name__ in ['__main__', 'temp']:
     if __name__ == '__main__':
         from ocp_vscode import show_object
+
     show_object(button_abxy)

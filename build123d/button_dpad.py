@@ -66,7 +66,8 @@ with BuildPart() as button_dpad:
 if __name__ in ['__main__', 'temp']:
     if __name__ == '__main__':
         from ocp_vscode import show_object
-        show_object(button_dpad)
+
+    show_object(button_dpad)
 
     print(f"Volume: {button_dpad.part.volume}")
 

@@ -1,4 +1,4 @@
-from build123d import Axis, Plane, export_stl, export_step
+from build123d import Axis, Plane, Compound, Location, export_stl, export_step
 
 # Import parts.
 import sys
@@ -6,7 +6,9 @@ sys.path.insert(1, './build123d')
 from wheel import wheel, core, holder
 from trigger_r1 import trigger_r1
 from button_select import button_select
-
+from button_dpad import button_dpad
+from cover import cover
+from button_abxy import button_abxy
 
 STL_DIR = 'stl/'
 STEP_DIR = 'step/'
@@ -26,3 +28,12 @@ export(trigger_r1.part.mirror(Plane.YZ), 'primary_015mm_trigger_L1')
 
 # Button Select.
 export(button_select.part, 'primary_007mm_select_4x')
+
+# Button D-Pad.
+export(button_dpad.part, 'secondary_007mm_dpad_4x')
+
+# Battery Cover.
+export(cover.part, 'secondary_015mm_cover')
+
+# Button ABXY.
+export(button_abxy.part, 'secondary_007mm_button_abxy_4x')

@@ -113,13 +113,8 @@ with BuildPart() as holder:
     extrude(amount=-HOLDER_WIDTH)
 
 
-# __main__ => show in VSCode
-# temp     => show in CQEditor
-
-if __name__ in ['__main__', 'temp']:
-    if __name__ == '__main__':
-        from ocp_vscode import show_object
-
+if __name__ == '__main__':
+    from common.vscode import show_object
     show_object(wheel)
     show_object(core)
     show_object(holder)

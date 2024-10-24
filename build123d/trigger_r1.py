@@ -110,5 +110,7 @@ with BuildPart() as trigger_r1:
     add(internal.part)
     add(slab.part)
 
-if __name__ in ['__main__', 'temp']:
+
+if __name__ == '__main__':
+    from common.vscode import show_object
     show_object(trigger_r1)

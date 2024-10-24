@@ -14,6 +14,7 @@ STL_DIR = 'stl/'
 STEP_DIR = 'step/'
 
 def export(obj, filename):
+    print(f'Exporting {filename}')
     export_stl(obj, STL_DIR + filename + '.stl')
     export_step(obj, STEP_DIR + filename + '.step')
 

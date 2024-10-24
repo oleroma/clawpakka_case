@@ -57,13 +57,7 @@ with BuildPart() as button_dpad:
     chamfer(edges, TOP_CHAMFER_SIZE)
 
 
-# __main__ => show in VSCode
-# temp     => show in CQEditor
-if __name__ in ['__main__', 'temp']:
-    if __name__ == '__main__':
-        from ocp_vscode import show_object
-
+if __name__ == '__main__':
+    from common.vscode import show_object
     show_object(button_dpad)
-
     print(f"Volume: {button_dpad.part.volume}")
-

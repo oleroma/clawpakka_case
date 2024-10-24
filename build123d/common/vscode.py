@@ -1,8 +1,8 @@
 try:
-    print(f'Loading ocp_vscode...')
+    print('OCP_VSCODE: Loading...')
     from ocp_vscode import set_defaults, Camera, show_object
     set_defaults(reset_camera=Camera.KEEP)
     # TODO: Naming sidebar objects.
-    print(f'Loading ocp_vscode complete')
+    print('OCP_VSCODE: Loaded')
 except Exception as error:
-    print(f'ocp_vscode error ({error})')
+    print(f'OCP_VSCODE: Error ({error})')

@@ -7,11 +7,13 @@ AXLE_Y_OFFSET = 11
 BODY_X_LEN = 18
 BODY_Z_LEN = 9.1
 BODY_Z_ORIGIN = -3.6
-BODY_X_TOLERANCE = 0.1
+BODY_Y_TOLERANCE = 0.4
 
 ANCHORS_X_LEN = 1.6
 ANCHORS_Y_LEN = 2
 ANCHORS_X_GAP = 13
+ANCHORS_Z_ORIGIN = 0
+ANCHORS_Z_LEN = 5.5
 
 
 with BuildPart() as support:
@@ -19,30 +21,39 @@ with BuildPart() as support:
     workplane = Plane(origin=(AXLE_X_OFFSET, 0))
 
     # Body.
-    with BuildSketch(workplane.offset(BODY_Z_ORIGIN)):
-        with Locations((0, -AXLE_Y_OFFSET + BODY_X_TOLERANCE)):
+    with BuildSketch(workplane.offset(BODY_Z_ORIGIN)) as body:
+        with Locations((0, -AXLE_Y_OFFSET + BODY_Y_TOLERANCE)):
             Rectangle(
                 BODY_X_LEN,
-                AXLE_Y_OFFSET + AXLE_RADIUS - BODY_X_TOLERANCE,
+                AXLE_Y_OFFSET + AXLE_RADIUS - BODY_Y_TOLERANCE,
                 align=(Align.CENTER, Align.MIN),
             )
     extrude(amount=BODY_Z_LEN)
-    edge = (edges()
+
+    # Fillet body corners
+    corners = (edges()
+        .filter_by(Axis.Z)
+        .group_by(Axis.Y, reverse=True)[0]
+    )
+    fillet(corners, radius=4)
+
+    # Chamfer from bed.
+    bed_edge = (edges()
         .filter_by(Axis.X)
         .group_by(Axis.Z)[0]
         .sort_by(Axis.Y, reverse=True)[0]
     )
-    chamfer(edge, length=2.9, length2=1.8)
+    chamfer(bed_edge, length=1.3, length2=2.7)
 
     # Anchors.
-    with BuildSketch(workplane.offset(0.5)):
-        with Locations((0, -AXLE_Y_OFFSET + BODY_X_TOLERANCE)):
+    with BuildSketch(workplane.offset(ANCHORS_Z_ORIGIN)) as anchors:
+        with Locations((0, -AXLE_Y_OFFSET + BODY_Y_TOLERANCE)):
             Rectangle(
                 ANCHORS_X_GAP,
                 ANCHORS_Y_LEN,
                 align=(Align.CENTER, Align.MAX),
             )
-    extrude(amount=5)
+    extrude(amount=ANCHORS_Z_LEN)
     hang_edge = (edges()
         .filter_by(Axis.X)
         .group_by(Axis.Y)[0]
@@ -52,7 +63,8 @@ with BuildPart() as support:
 
     # Remove thumbstick block.
     with BuildSketch(workplane.offset(BODY_Z_ORIGIN)):
-        Rectangle(9.8, 20, align=(Align.CENTER, Align.MAX))
+        with Locations((0, 0.5)):
+            Rectangle(9.8, 20, align=(Align.CENTER, Align.MAX))
     extrude(amount=10, mode=Mode.SUBTRACT)
 
     # Remove big cylinder (aligned with wheel).
@@ -61,9 +73,9 @@ with BuildPart() as support:
     extrude(amount=10, mode=Mode.SUBTRACT)
 
     # Plate.
-    with BuildSketch():
+    with BuildSketch(workplane):
         with Locations((0, AXLE_RADIUS)):
-            Rectangle(13, 6, align=(Align.CENTER, Align.MAX))
+            RectangleRounded(12, 6, radius=1, align=(Align.CENTER, Align.MAX))
     extrude(amount=-0.5)
 
     # Axle.

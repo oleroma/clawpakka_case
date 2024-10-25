@@ -3,9 +3,9 @@ from math import cos, pi
 
 from wheel import HEX_DIAMETER, HEX_DIAMETER_SHORT
 ENCODER_X_OFFSET = 14.5
-HEX_LEN = 7.25
+HEX_LEN = 8
 TAB_RADIUS = 6
-TAB_WIDTH = 1
+TAB_WIDTH = 0.8
 
 
 with BuildPart() as passtru:

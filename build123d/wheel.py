@@ -11,11 +11,13 @@ HEX_DIAMETER = 2  # Previously 2.05
 HEX_DIAMETER_SHORT = HEX_DIAMETER * cos(pi / 6)
 
 LEFT_PADDING_RADIUS = 3.5
-LEFT_PADDING_WIDTH = 2.7
-LEFT_HOLE_TOLERANCE = 0.1
+LEFT_PADDING_WIDTH = 2.5
+
+LEFT_HOLE_TOLERANCE = 0
 LEFT_HOLE_RADIUS = (HEX_DIAMETER_SHORT / 2) + LEFT_HOLE_TOLERANCE
-LEFT_HOLE_DEPTH = LEFT_PADDING_WIDTH
+LEFT_HOLE_DEPTH = LEFT_PADDING_WIDTH + 1
 LEFT_HOLE_CHAMFER = 0.5
+
 RIGHT_HOLE_RADIUS = 2
 RIGHT_HOLE_RADIUS_TOLERANCE = 0.15
 RIGHT_HOLE_DEPTH = 5
@@ -57,8 +59,6 @@ with BuildPart() as wheel:
             return RegularPolygon(radius, 3, major_radius=False)
         with Locations(Rotation(0, 0, -30)):
             RegularTriangle(LEFT_HOLE_RADIUS)
-        # with Locations(Rotation(0, 0, 180)):
-        #     RegularTriangle(LEFT_HOLE_RADIUS)
     extrude(amount=-LEFT_HOLE_DEPTH, mode=Mode.SUBTRACT)
 
     # Star chamfer.

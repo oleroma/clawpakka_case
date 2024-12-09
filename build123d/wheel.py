@@ -13,15 +13,14 @@ HEX_DIAMETER_SHORT = HEX_DIAMETER * cos(pi / 6)
 LEFT_PADDING_RADIUS = 3.5
 LEFT_PADDING_WIDTH = 2.5
 
-LEFT_HOLE_TOLERANCE = 0
-LEFT_HOLE_RADIUS = (HEX_DIAMETER_SHORT / 2) + LEFT_HOLE_TOLERANCE
-LEFT_HOLE_DEPTH = LEFT_PADDING_WIDTH + 1
-LEFT_HOLE_CHAMFER = 0.5
-
-RIGHT_HOLE_RADIUS = 2
+RIGHT_HOLE_RADIUS = 1.5
 RIGHT_HOLE_RADIUS_TOLERANCE = 0.15
-RIGHT_HOLE_DEPTH = 5
+RIGHT_HOLE_DEPTH = 4.5
 
+LEFT_HOLE_WIDTH = 9
+LEFT_HOLE_UNDER_WIDTH = 5.5
+LEFT_HOLE_DEPTH = WHEEL_WIDTH - RIGHT_HOLE_DEPTH
+LEFT_HOLE_CHAMFER = 0.5
 
 with BuildPart() as wheel:
     with BuildSketch():
@@ -48,44 +47,28 @@ with BuildPart() as wheel:
     side_edges = edges().filter_by(Axis.Z, reverse=True)
     chamfer(side_edges, WHEEL_CHAMFER)
 
-    # Left padding.
-    with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)):
-        Circle(LEFT_PADDING_RADIUS)
-    extrude(amount=LEFT_PADDING_WIDTH)
-
-    # Left hole.
-    with BuildSketch(Plane.XY.offset(WHEEL_WIDTH + LEFT_PADDING_WIDTH)):
-        def RegularTriangle(radius):
-            return RegularPolygon(radius, 3, major_radius=False)
-        with Locations(Rotation(0, 0, -30)):
-            RegularTriangle(LEFT_HOLE_RADIUS)
-    extrude(amount=-LEFT_HOLE_DEPTH, mode=Mode.SUBTRACT)
-
-    # Star chamfer.
-    star_edges = (edges()
-        .filter_by(Axis.Z, reverse=True)
-        .filter_by_position(
-            Axis.Z,
-            minimum=WHEEL_WIDTH + LEFT_PADDING_WIDTH,
-            maximum=WHEEL_WIDTH + LEFT_PADDING_WIDTH,
-        )
-        .sort_by()[1:]
-    )
-    chamfer(star_edges, LEFT_HOLE_CHAMFER)
-
-    # Right hole
+    # Right hole.
     with BuildSketch():
         Circle(RIGHT_HOLE_RADIUS + RIGHT_HOLE_RADIUS_TOLERANCE)
     extrude(amount=RIGHT_HOLE_DEPTH, mode=Mode.SUBTRACT)
+
+    # Left hole.
+    with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)):
+        with Locations(Rotation(0, 0, 45)):
+            Rectangle(LEFT_HOLE_WIDTH, LEFT_HOLE_WIDTH)
+        split(bisect_by=Plane.XZ.offset(HEX_DIAMETER_SHORT/2), keep=Keep.BOTTOM)
+        with Locations(Rotation(0, 0, 45)):
+            Rectangle(LEFT_HOLE_UNDER_WIDTH, LEFT_HOLE_UNDER_WIDTH)
+    extrude(amount=-LEFT_HOLE_DEPTH, mode=Mode.SUBTRACT)
 
 
 if __name__ == '__main__':
     from common.vscode import show_object
     from wheel_support import support
-    from wheel_passtru import passtru
-    show_object(wheel)
-    show_object(support)
-    show_object(passtru)
-    export_stl(wheel.part, 'stl/wheel_a1.stl')
-    export_stl(support.part, 'stl/support_a1.stl')
-    export_stl(passtru.part, 'stl/passtru_a1.stl')
+    from wheel_core import core
+    show_object(wheel, name='Wheel')
+    show_object(support, name='Support')
+    show_object(core, name='Core')
+    # export_stl(wheel.part, 'stl/test_wheel.stl')
+    # export_stl(support.part, 'stl/test_support.stl')
+    # export_stl(core.part, 'stl/test_core.stl')

@@ -1,91 +1,69 @@
 from build123d import *
 
 from wheel import RIGHT_HOLE_RADIUS as AXLE_RADIUS
+AXLE_LEN = 1.5
 AXLE_X_OFFSET = 0.5
 AXLE_Y_OFFSET = 11
 
 BODY_X_LEN = 18
-BODY_Z_LEN = 9.1
-BODY_Z_ORIGIN = -3.6
-BODY_Y_TOLERANCE = 0.4
+BODY_Z_LEN = 3.5
+BODY_Y_TOLERANCE = 0  # 0.4
 
-ANCHORS_X_LEN = 1.6
-ANCHORS_Y_LEN = 2
-ANCHORS_X_GAP = 13
-ANCHORS_Z_ORIGIN = 0
-ANCHORS_Z_LEN = 5.5
+SEPARATOR_Z_LEN = 0.5
 
+BLOCK_X = 9.6  # 9.8
+BLOCK_Y = 15
+BLOCK_Y_OFFSET = 0.3  # 0.5
+
+# Translated plane by X offset.
+workplane = Plane(origin=(AXLE_X_OFFSET, 0))
 
 with BuildPart() as support:
-    # Translated plane by X offset.
-    workplane = Plane(origin=(AXLE_X_OFFSET, 0))
-
     # Body.
-    with BuildSketch(workplane.offset(BODY_Z_ORIGIN)) as body:
+    with BuildSketch(workplane.offset(-SEPARATOR_Z_LEN)) as body_s:
         with Locations((0, -AXLE_Y_OFFSET + BODY_Y_TOLERANCE)):
             Rectangle(
                 BODY_X_LEN,
                 AXLE_Y_OFFSET + AXLE_RADIUS - BODY_Y_TOLERANCE,
                 align=(Align.CENTER, Align.MIN),
             )
-    extrude(amount=BODY_Z_LEN)
-
-    # Fillet body corners
-    corners = (edges()
-        .filter_by(Axis.Z)
-        .group_by(Axis.Y, reverse=True)[0]
-    )
-    fillet(corners, radius=4)
+    extrude(amount=-BODY_Z_LEN)
 
     # Chamfer from bed.
-    bed_edge = (edges()
+    edge_bed = (edges()
         .filter_by(Axis.X)
         .group_by(Axis.Z)[0]
         .sort_by(Axis.Y, reverse=True)[0]
     )
-    chamfer(bed_edge, length=1.3, length2=2.7)
+    chamfer(edge_bed, length=3.1, length2=0.8)
 
-    # Anchors.
-    with BuildSketch(workplane.offset(ANCHORS_Z_ORIGIN)) as anchors:
-        with Locations((0, -AXLE_Y_OFFSET + BODY_Y_TOLERANCE)):
-            Rectangle(
-                ANCHORS_X_GAP,
-                ANCHORS_Y_LEN,
-                align=(Align.CENTER, Align.MAX),
-            )
-    extrude(amount=ANCHORS_Z_LEN)
-    hang_edge = (edges()
-        .filter_by(Axis.X)
-        .group_by(Axis.Y)[0]
-        .sort_by(Axis.Z)[0]
+    # Fillet body corners
+    edges_corner = (edges()
+        .filter_by(Axis.Z)
+        .group_by(Axis.Y, reverse=True)[0]
     )
-    chamfer(hang_edge, ANCHORS_Y_LEN-0.01)
+    fillet(edges_corner, radius=4)
 
     # Remove thumbstick block.
-    with BuildSketch(workplane.offset(BODY_Z_ORIGIN)):
-        with Locations((0, 0.5)):
-            Rectangle(9.8, 20, align=(Align.CENTER, Align.MAX))
+    with BuildSketch(workplane.offset(-SEPARATOR_Z_LEN - BODY_Z_LEN)):
+        with Locations((0, BLOCK_Y_OFFSET)):
+            Rectangle(BLOCK_X, BLOCK_Y, align=(Align.CENTER, Align.MAX))
     extrude(amount=10, mode=Mode.SUBTRACT)
 
-    # Remove big cylinder (aligned with wheel).
-    with BuildSketch(Plane.XY.offset(-0.5)):
-        Circle(11.5)
-    extrude(amount=10, mode=Mode.SUBTRACT)
-
-    # Plate.
-    with BuildSketch(workplane):
+    # Separator.
+    with BuildSketch(workplane) :
         with Locations((0, AXLE_RADIUS)):
-            RectangleRounded(12, 6, radius=1, align=(Align.CENTER, Align.MAX))
-    extrude(amount=-0.5)
+            RectangleRounded(12.5, AXLE_RADIUS*2, radius=1, align=(Align.CENTER, Align.MAX))
+    extrude(amount=-SEPARATOR_Z_LEN)
 
     # Axle.
     with BuildSketch():
         Circle(AXLE_RADIUS)
-    extrude(amount=4)
+    extrude(amount=AXLE_LEN)
 
 
 if __name__ == '__main__':
     from common.vscode import show_object
     from wheel import wheel
-    show_object(wheel)
-    show_object(support)
+    show_object(support, name="Support")
+    show_object(wheel, name="Wheel")

@@ -3,12 +3,15 @@ from build123d import Axis, Plane, Compound, Location, export_stl, export_step
 # Import parts.
 import sys
 sys.path.insert(1, './build123d')
-from wheel import wheel, core, holder
-from trigger_r1 import trigger_r1
-from button_select import button_select
 from button_dpad import button_dpad
-from cover import cover
 from button_abxy import button_abxy
+from button_select import button_select
+from thumbstick import thumbstick as thumbstick_right
+from wheel import wheel
+from wheel_core import core
+from wheel_holder import holder
+from trigger_r1 import trigger_r1
+from cover import cover
 
 STL_DIR = 'stl/'
 STEP_DIR = 'step/'
@@ -28,8 +31,11 @@ export(trigger_r1.part.mirror(Plane.YZ), 'primary_015mm_trigger_L1')
 
 # Scroll wheel.
 export(wheel.part, 'secondary_015mm_wheel')
-export(core.part.rotate(Axis.X, 90), 'secondary_007mm_wheel_core')
+export(core.part.rotate(Axis.X, 90), 'any_007mm_wheel_core')
 export(holder.part, 'any_015mm_wheel_holder')
 
 # Battery Cover.
 export(cover.part, 'secondary_015mm_cover')
+
+# Thumbstick right.
+export(thumbstick_right.part, 'secondary_007mm_thumbstick_R')

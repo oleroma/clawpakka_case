@@ -1,7 +1,7 @@
 from build123d import *
 
-SHAFT_HEIGHT = 8.5
-SHAFT_RADIUS = 2.5  # 2.4
+NECK_HEIGHT = 8.5
+NECK_RADIUS = 2.5
 
 HEAD_RADIUS = 4
 HEAD_TALL = 2
@@ -10,7 +10,7 @@ HEAD_CHAMFER = 0.5
 DOME_RADIUS = 12
 DOME_CUT = DOME_RADIUS - 1.75
 
-HOLE_TOLERANCE = 0.12  #0.15  #0.1  #0.06
+HOLE_TOLERANCE = 0.12
 HOLE_RADIUS = 2 + HOLE_TOLERANCE
 HOLE_CUT = 1.5 + HOLE_TOLERANCE
 HOLE_DEPTH = 5 + 0.5
@@ -26,13 +26,13 @@ with BuildPart() as thumbstick:
     # Shaft and head.
     with BuildSketch(Plane.XZ) as shaft:
         with Locations((0, DOME_CUT)):
-            Rectangle(SHAFT_RADIUS, SHAFT_HEIGHT, align=Align.MIN)
+            Rectangle(NECK_RADIUS, NECK_HEIGHT, align=Align.MIN)
             with BuildLine(Location((0, DOME_CUT))) as head:
                 Polyline(
-                    (0,           SHAFT_HEIGHT),
-                    (HEAD_RADIUS, SHAFT_HEIGHT),
-                    (HEAD_RADIUS, SHAFT_HEIGHT - HEAD_TALL),
-                    (0,           SHAFT_HEIGHT - HEAD_TALL - HEAD_RADIUS),
+                    (0,           NECK_HEIGHT),
+                    (HEAD_RADIUS, NECK_HEIGHT),
+                    (HEAD_RADIUS, NECK_HEIGHT - HEAD_TALL),
+                    (0,           NECK_HEIGHT - HEAD_TALL - HEAD_RADIUS),
                 )
             make_face()
 

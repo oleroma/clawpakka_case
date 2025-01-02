@@ -2,7 +2,9 @@
 # Copyright (C) 2022, Input Labs Oy.
 
 BLENDER := 'blender'
-# BLENDER := '/Applications/Blender.app/Contents/MacOS/Blender'
+ifeq ($(shell uname), Darwin)
+	BLENDER := '/Applications/Blender.app/Contents/MacOS/Blender'
+endif
 
 default: release
 
@@ -19,7 +21,7 @@ clean:
 	mkdir -p stl
 	mkdir -p step
 
-stl: clean blend b123d
+stl: clean b123d blend
 
 blend:
 	$(BLENDER) blender/case_front.blend --background --python scripts/export_blender.py

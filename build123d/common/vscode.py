@@ -1,4 +1,3 @@
-print('OCP_VSCODE: Loading...')
 from ocp_vscode import set_defaults, Camera
 
 # Functions available to the importer.

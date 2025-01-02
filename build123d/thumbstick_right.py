@@ -16,7 +16,7 @@ HOLE_CUT = 1.5 + HOLE_TOLERANCE
 HOLE_DEPTH = 5 + 0.5
 
 
-with BuildPart() as thumbstick:
+with BuildPart() as thumbstick_right:
     # Dome.
     with BuildSketch(Plane.XZ) as dome_external:
         Circle(radius=DOME_RADIUS)
@@ -52,5 +52,5 @@ with BuildPart() as thumbstick:
 
 if __name__ == '__main__':
     from common.vscode import show_object
-    show_object(thumbstick, name='Thumbstick')
-    # export_stl(thumbstick.part, 'stl/test_thumbstick_right.stl')
+    show_object(thumbstick_right, name='Thumbstick')
+    # export_stl(thumbstick_right.part, 'stl/test_thumbstick_right.stl')

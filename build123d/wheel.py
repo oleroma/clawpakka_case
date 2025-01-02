@@ -64,7 +64,7 @@ with BuildPart() as wheel:
 
 if __name__ == '__main__':
     from common.vscode import show_object
-    from wheel_support import support
+    from wheel_holder import holder
     from wheel_core import core
     show_object(wheel, name='Wheel')
     show_object(support, name='Support')

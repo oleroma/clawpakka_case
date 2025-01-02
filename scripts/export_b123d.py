@@ -6,7 +6,7 @@ sys.path.insert(1, './build123d')
 from button_dpad import button_dpad
 from button_abxy import button_abxy
 from button_select import button_select
-from thumbstick import thumbstick as thumbstick_right
+from thumbstick_right import thumbstick_right
 from wheel import wheel
 from wheel_core import core
 from wheel_holder import holder

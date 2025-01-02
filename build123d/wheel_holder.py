@@ -18,7 +18,7 @@ BLOCK_Y_OFFSET = 0.3  # 0.5
 # Translated plane by X offset.
 workplane = Plane(origin=(AXLE_X_OFFSET, 0))
 
-with BuildPart() as support:
+with BuildPart() as holder:
     # Body.
     with BuildSketch(workplane.offset(-SEPARATOR_Z_LEN)) as body_s:
         with Locations((0, -AXLE_Y_OFFSET + BODY_Y_TOLERANCE)):

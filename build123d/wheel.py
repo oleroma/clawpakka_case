@@ -52,7 +52,7 @@ with BuildPart() as wheel:
         Circle(RIGHT_HOLE_RADIUS + RIGHT_HOLE_RADIUS_TOLERANCE)
     extrude(amount=RIGHT_HOLE_DEPTH, mode=Mode.SUBTRACT)
 
-    # Left hole.
+    # Left aperture (in which the core is inserted).
     with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)):
         with Locations(Rotation(0, 0, 45)):
             Rectangle(LEFT_HOLE_WIDTH, LEFT_HOLE_WIDTH)
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     from wheel_holder import holder
     from wheel_core import core
     show_object(wheel, name='Wheel')
-    show_object(support, name='Support')
+    show_object(holder, name='Holder')
     show_object(core, name='Core')
     # export_stl(wheel.part, 'stl/test_wheel.stl')
     # export_stl(support.part, 'stl/test_support.stl')

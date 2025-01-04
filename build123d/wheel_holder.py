@@ -7,13 +7,18 @@ AXLE_Y_OFFSET = 11
 
 BODY_X_LEN = 18
 BODY_Z_LEN = 3.5
-BODY_Y_TOLERANCE = 0  # 0.4
+BODY_Y_TOLERANCE = 0
 
+SEPARATOR_X_LEN = 12.5
 SEPARATOR_Z_LEN = 0.5
+SEPARATOR_CORNER_RADIUS = 1
 
-BLOCK_X = 9.6  # 9.8
+BLOCK_X = 9.6
 BLOCK_Y = 15
-BLOCK_Y_OFFSET = 0.3  # 0.5
+BLOCK_Y_OFFSET = 0.3
+
+CHAMFER_Y = 0.8
+CHAMFER_Z = 3.1
 
 # Translated plane by X offset.
 workplane = Plane(origin=(AXLE_X_OFFSET, 0))
@@ -35,7 +40,7 @@ with BuildPart() as holder:
         .group_by(Axis.Z)[0]
         .sort_by(Axis.Y, reverse=True)[0]
     )
-    chamfer(edge_bed, length=3.1, length2=0.8)
+    chamfer(edge_bed, length=CHAMFER_Z, length2=CHAMFER_Y)
 
     # Fillet body corners
     edges_corner = (edges()
@@ -48,12 +53,17 @@ with BuildPart() as holder:
     with BuildSketch(workplane.offset(-SEPARATOR_Z_LEN - BODY_Z_LEN)):
         with Locations((0, BLOCK_Y_OFFSET)):
             Rectangle(BLOCK_X, BLOCK_Y, align=(Align.CENTER, Align.MAX))
-    extrude(amount=10, mode=Mode.SUBTRACT)
+    extrude(amount=BLOCK_Y, mode=Mode.SUBTRACT)
 
     # Separator.
-    with BuildSketch(workplane) :
+    with BuildSketch(workplane):
         with Locations((0, AXLE_RADIUS)):
-            RectangleRounded(12.5, AXLE_RADIUS*2, radius=1, align=(Align.CENTER, Align.MAX))
+            RectangleRounded(
+                SEPARATOR_X_LEN,
+                AXLE_RADIUS * 2,
+                radius=SEPARATOR_CORNER_RADIUS,
+                align=(Align.CENTER, Align.MAX)
+            )
     extrude(amount=-SEPARATOR_Z_LEN)
 
     # Axle.
@@ -65,5 +75,5 @@ with BuildPart() as holder:
 if __name__ == '__main__':
     from common.vscode import show_object
     from wheel import wheel
-    show_object(support, name="Support")
+    show_object(holder, name="Holder")
     show_object(wheel, name="Wheel")

@@ -10,10 +10,11 @@ HEAD_CHAMFER = 0.5
 DOME_RADIUS = 12
 DOME_CUT = DOME_RADIUS - 1.75
 
-HOLE_TOLERANCE = 0.12
-HOLE_RADIUS = 2 + HOLE_TOLERANCE
-HOLE_CUT = 1.5 + HOLE_TOLERANCE
-HOLE_DEPTH = 5 + 0.5
+HOLE_TOLERANCE_XY = 0.12
+HOLE_TOLERANCE_Z = 0.5
+HOLE_RADIUS = 2 + HOLE_TOLERANCE_XY
+HOLE_CUT = 1.5 + HOLE_TOLERANCE_XY
+HOLE_DEPTH = 5 + HOLE_TOLERANCE_Z
 
 
 with BuildPart() as thumbstick_right:
@@ -23,7 +24,7 @@ with BuildPart() as thumbstick_right:
         split(bisect_by=Plane.XZ.offset(-DOME_CUT), keep=Keep.BOTTOM)
         split(bisect_by=Plane.YZ)
 
-    # Shaft and head.
+    # Neck and head.
     with BuildSketch(Plane.XZ) as shaft:
         with Locations((0, DOME_CUT)):
             Rectangle(NECK_RADIUS, NECK_HEIGHT, align=Align.MIN)

@@ -4,5 +4,6 @@ stl/
 step/
 3mf/
 release/
+blender/render/
 .vscode/
 __pycache__/

@@ -13,7 +13,8 @@ except ModuleNotFoundError:
 # top hex
 HEX_TOP_HEIGHT = 1.9
 HEX_DEPTH = 40
-HEX_PTS = ((0, 0), ## only half => mirror
+HEX_PTS = ( ## only half => mirror
+    (0, 0),
     (18, 10),
     (18, 30),
     (0, HEX_DEPTH))
@@ -29,22 +30,22 @@ hex_hole_radius=5
 
 # trapezoid
 TRAPEZ_WIDTH = 2.758 ## tight: 2.8
-TRAPEZ_PTS = ((0, 0),
-               (math.sqrt(200), 0),
-               (3, 18 - HEX_TOP_HEIGHT),
-               (0, 18 - HEX_TOP_HEIGHT))
+TRAPEZ_PTS = (
+    (0, 0),
+    (math.sqrt(10 * 10 + 10 * 10), 0), # diagonal of width (10) and depth (10)
+    (3, 18 - HEX_TOP_HEIGHT),
+    (0, 18 - HEX_TOP_HEIGHT))
 
 
-with BuildPart() as hex:
+with BuildPart() as chex:
     with BuildSketch():
         with BuildLine() as top_outline:
            line = Polyline(HEX_PTS)
            mirror(top_outline.line, about=Plane.YZ)
-           
         make_face()
 
         with Locations(HEX_HOLE_LOCATIONS):
-            Circle(hex_hole_radius, mode=Mode.SUBTRACT)    
+            Circle(hex_hole_radius, mode=Mode.SUBTRACT)
 
     extrude(amount=HEX_TOP_HEIGHT)
 
@@ -64,5 +65,5 @@ with BuildPart() as hex:
 
 
 if __name__ in ['__main__', 'temp']:
-    show_object(hex)
-    print(f"Volume: {hex.part.volume}")
+    show_object(chex)
+    print(f"Volume: {chex.part.volume}")

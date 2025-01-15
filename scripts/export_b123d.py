@@ -28,4 +28,4 @@ export(trigger_r1.part.mirror(Plane.YZ), 'primary_015mm_trigger_L1')
 export(cover.part, 'secondary_015mm_cover')
 
 # Conductive Hex.
-export(cover.part, 'conductive_015mm_hexagon')
+export(chex.part, 'conductive_015mm_hexagon')

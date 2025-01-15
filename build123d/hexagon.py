@@ -33,7 +33,7 @@ TRAPEZ_WIDTH = 2.758 ## tight: 2.8
 TRAPEZ_PTS = (
     (0, 0),
     (math.sqrt(10 * 10 + 10 * 10), 0), # diagonal of width (10) and depth (10)
-    (3, 18 - HEX_TOP_HEIGHT),
+    (2.2, 18 - HEX_TOP_HEIGHT),
     (0, 18 - HEX_TOP_HEIGHT))
 
 

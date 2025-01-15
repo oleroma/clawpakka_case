@@ -12,7 +12,7 @@ from wheel_core import core
 from wheel_holder import holder
 from trigger_r1 import trigger_r1
 from cover import cover
-from hexagon import hex
+from hexagon import chex
 
 STL_DIR = 'stl/'
 STEP_DIR = 'step/'

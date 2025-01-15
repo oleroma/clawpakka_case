@@ -131,7 +131,6 @@ entries = [
     Entry('Case back',        'secondary_015mm_back', '-Z'),
     Entry('Home',             'secondary_007mm_home', rotate=True),
     Entry('Thumbstick',       'secondary_007mm_thumbstick', tolerance=True),
-    Entry('Hexagon',          'conductive_015mm_hexagon', '-Z', tolerance=True),
     Entry('Anchor',           'any_015mm_anchors_2x', '-Z', split=True),
     Entry('Soldering helper', 'any_020mm_solderstand', '-Z', merge=True),
 ]

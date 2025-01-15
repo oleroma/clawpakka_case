@@ -1,50 +1,27 @@
+from build123d import *
 from math import cos, pi
-from build123d import (
-    Axis, BuildLine, BuildPart, BuildSketch, Circle, Keep, Kind, Line,
-    Location, Mode, Plane, PolarLine, PolarLocations, Polyline, RegularPolygon,
-    add, chamfer, edges, extrude, make_face, mirror, offset, split
-)
 
-try:
-    from ocp_vscode import show_object
-except ModuleNotFoundError:
-    pass
-
-# Wheel
 WHEEL_INDENTS = 24
 WHEEL_RADIUS_OUTER = 10.75
 WHEEL_RADIUS_INNER = 10.25
 WHEEL_WIDTH = 6.75
 WHEEL_CHAMFER = 0.75
 
-# Core
-CORE_RADIUS = 8
-CORE_TOLERANCE = 0.1
-RIGHT_PADDING_LEN = 1.8
-RIGHT_PADDING_RADIUS = 2
-HEX_DIAMETER = 2.05  # 2 millimeter + extra for better fit.
-HEX_LEN = 5.3
-LEFT_AXLE_DIAMETER = HEX_DIAMETER * cos(pi / 6)
-LEFT_AXLE_LEN = 5
+HEX_DIAMETER = 2  # Previously 2.05
+HEX_DIAMETER_SHORT = HEX_DIAMETER * cos(pi / 6)
 
-# Holder
-HOLDER_BASE_LEN = 13
-HOLDER_TOP_LEN = 9.8
-HOLDER_HEIGHT = 13
-HOLDER_WIDTH = 8.3  # Original 7.
-HOLDER_AXLE_TOLERANCE = 0.2
-HOLDER_AXLE_OFFSET_FROM_TOP = 2
+LEFT_PADDING_RADIUS = 3.5
+LEFT_PADDING_WIDTH = 2.5
 
-# Common.
-CENTER = (0, 0)
-PRINTBED_PLANE = Plane.XZ.offset(LEFT_AXLE_DIAMETER / 2)
+RIGHT_HOLE_RADIUS = 1.5
+RIGHT_HOLE_RADIUS_TOLERANCE = 0.15
+RIGHT_HOLE_DEPTH = 4.5
 
-# Core sketch (to be reused).
-with BuildSketch() as core_sketch:
-    Circle(CORE_RADIUS)
-    split(bisect_by=PRINTBED_PLANE, keep=Keep.BOTTOM)
+LEFT_HOLE_WIDTH = 9
+LEFT_HOLE_UNDER_WIDTH = 5.5
+LEFT_HOLE_DEPTH = WHEEL_WIDTH - RIGHT_HOLE_DEPTH
+LEFT_HOLE_CHAMFER = 0.5
 
-# Wheel part.
 with BuildPart() as wheel:
     with BuildSketch():
         # Create a single indent chevron.
@@ -52,7 +29,7 @@ with BuildPart() as wheel:
             # Create indent line.
             a = (WHEEL_RADIUS_OUTER, 0)
             b = PolarLine(
-                start=CENTER,
+                start=(0, 0),
                 length=WHEEL_RADIUS_INNER,
                 angle=(180 / WHEEL_INDENTS),
                 mode=Mode.PRIVATE,
@@ -64,61 +41,34 @@ with BuildPart() as wheel:
         with PolarLocations(0, WHEEL_INDENTS):
             add(line.line)
         make_face()
-    # Make 3D.
     extrude(amount=WHEEL_WIDTH)
-    # Chamfer.
-    edge_list = edges().filter_by(Axis.Z, reverse=True)
-    chamfer(edge_list, WHEEL_CHAMFER)
-    # Remove the core.
-    with BuildSketch():
-        add(core_sketch.sketch)
-        offset(amount=CORE_TOLERANCE, kind=Kind.INTERSECTION)
-    extrude(amount=WHEEL_WIDTH, mode=Mode.SUBTRACT)
 
-# Core part.
-with BuildPart() as core:
-    # Main core.
+    # Wheel chamfer.
+    side_edges = edges().filter_by(Axis.Z, reverse=True)
+    chamfer(side_edges, WHEEL_CHAMFER)
+
+    # Right hole.
     with BuildSketch():
-        add(core_sketch.sketch)
-    extrude(amount=WHEEL_WIDTH)
-    # Right axle (hexagon).
+        Circle(RIGHT_HOLE_RADIUS + RIGHT_HOLE_RADIUS_TOLERANCE)
+    extrude(amount=RIGHT_HOLE_DEPTH, mode=Mode.SUBTRACT)
+
+    # Left aperture (in which the core is inserted).
     with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)):
-        RegularPolygon(HEX_DIAMETER / 2, 6)
-    extrude(amount=HEX_LEN)
-    # Right padding.
-    with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)):
-        Circle(RIGHT_PADDING_RADIUS)
-        split(bisect_by=PRINTBED_PLANE, keep=Keep.BOTTOM)
-    extrude(amount=RIGHT_PADDING_LEN)
-    # Left axle.
-    with BuildSketch(Plane.XY):
-        Circle(LEFT_AXLE_DIAMETER / 2)
-    # Make 3D.
-    extrude(amount=-LEFT_AXLE_LEN)
-
-# Holder part.
-with BuildPart() as holder:
-    with BuildSketch():
-        offset = Location((0, HOLDER_AXLE_OFFSET_FROM_TOP))
-        with BuildLine(offset) as line:
-            # Create half polygon.
-            Polyline([
-                CENTER,
-                (HOLDER_TOP_LEN / 2, 0),
-                (HOLDER_BASE_LEN / 2, -HOLDER_HEIGHT),
-                (0, -HOLDER_HEIGHT),
-            ])
-            # Mirror into full polygon.
-            mirror(line.line, about=Plane.YZ)
-        make_face()
-        # Remove hole.
-        radius = (LEFT_AXLE_DIAMETER / 2) + HOLDER_AXLE_TOLERANCE
-        Circle(radius, mode=Mode.SUBTRACT)
-    # Make 3D.
-    extrude(amount=-HOLDER_WIDTH)
+        with Locations(Rotation(0, 0, 45)):
+            Rectangle(LEFT_HOLE_WIDTH, LEFT_HOLE_WIDTH)
+        split(bisect_by=Plane.XZ.offset(HEX_DIAMETER_SHORT/2), keep=Keep.BOTTOM)
+        with Locations(Rotation(0, 0, 45)):
+            Rectangle(LEFT_HOLE_UNDER_WIDTH, LEFT_HOLE_UNDER_WIDTH)
+    extrude(amount=-LEFT_HOLE_DEPTH, mode=Mode.SUBTRACT)
 
 
-if __name__ in ['__main__', 'temp']:
-    show_object(wheel)
-    show_object(core)
-    show_object(holder)
+if __name__ == '__main__':
+    from common.vscode import show_object
+    from wheel_holder import holder
+    from wheel_core import core
+    show_object(wheel, name='Wheel')
+    show_object(holder, name='Holder')
+    show_object(core, name='Core')
+    # export_stl(wheel.part, 'stl/test_wheel.stl')
+    # export_stl(support.part, 'stl/test_support.stl')
+    # export_stl(core.part, 'stl/test_core.stl')

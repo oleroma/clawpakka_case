@@ -9,17 +9,13 @@ BASE_Y_SIDE = 20
 HOLE_RADIUS = 5
 HOLE_DISTANCE_FROM_CENTER = 12
 
+TRAPEZ_THICKNESS = 2.758  ## Tight version was 2.8.
+TRAPEZ_X_LEN = math.sqrt(10**2 + 10**2)  # Diagonal of 10x10 (Blender legacy).
+TRAPEZ_Z_LEN = 18
+TRAPEZ_TIP = 2.2
+
 TABS_Z_LEN = 4
 
-TRAPEZ_WIDTH = 2.758  ## Tight version was 2.8.
-TRAPEZ_HEIGHT = 18
-TRAPEZ_TIP_WIDTH = 2.2
-TRAPEZ_PTS = (
-    (0, 0),
-    (math.sqrt(10**2 + 10**2),         0),  # Diagonal of 10x10 (Blender legacy).
-    (TRAPEZ_TIP_WIDTH, TRAPEZ_HEIGHT - BASE_Z_LEN),
-    (0,                TRAPEZ_HEIGHT - BASE_Z_LEN),
-)
 
 with BuildPart() as chex:
     # Base.
@@ -46,22 +42,27 @@ with BuildPart() as chex:
 
     # Trapezoid.
     with BuildPart(mode=Mode.PRIVATE) as trapezoid_pt:
-        plane = Plane.XZ.offset(-TRAPEZ_WIDTH / 2)
-        with BuildSketch(plane):
+        with BuildSketch(Plane.XZ):
             with BuildLine():
-                Polyline(TRAPEZ_PTS)
+                points = (
+                    (0,            0),
+                    (TRAPEZ_X_LEN, 0),
+                    (TRAPEZ_TIP,   TRAPEZ_Z_LEN - BASE_Z_LEN),
+                    (0,            TRAPEZ_Z_LEN - BASE_Z_LEN),
+                )
+                Polyline(points)
                 mirror(about=Plane.YZ)
             make_face()
-        extrude(amount=TRAPEZ_WIDTH)
+        extrude(amount=TRAPEZ_THICKNESS, mode=Mode.SYMMETRIC)
     with Locations((0, 0, BASE_Z_LEN)):
         add(trapezoid_pt, rotation=(0, 0, -45))
         add(trapezoid_pt, rotation=(0, 0, 45))
 
     # Tabs (to prevent wrong insertion).
-    with BuildSketch(Plane.XY.offset(TRAPEZ_HEIGHT)):
+    with BuildSketch(Plane.XY.offset(TRAPEZ_Z_LEN)):
         cos45 = math.cos(math.radians(45))
-        width = (cos45 * TRAPEZ_TIP_WIDTH) + (cos45 * TRAPEZ_WIDTH/2)
-        height = TRAPEZ_TIP_WIDTH - TRAPEZ_WIDTH
+        width = (cos45 * TRAPEZ_TIP) + (cos45 * TRAPEZ_THICKNESS/2)
+        height = TRAPEZ_TIP - TRAPEZ_THICKNESS
         Rectangle(width*2, height*2)
     extrude(amount=-TABS_Z_LEN)
 

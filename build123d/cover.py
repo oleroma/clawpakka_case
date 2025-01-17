@@ -7,7 +7,7 @@ from build123d import (
 # bottom box
 COVER_BOTTOM_WIDTH = 62
 COVER_BOTTOM_DEPTH = 37
-COVER_BOTTOM_HEIGHT = 2
+COVER_BOTTOM_HEIGHT = 1.6
 
 # the two trapezoids
 TRAPEZ_WIDTH = 25

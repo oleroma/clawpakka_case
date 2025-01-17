@@ -59,20 +59,22 @@ BUMP_WIDTH = 4
 
 
 with BuildPart() as dongle_case:
+    # Main body
     with BuildSketch(Plane.XZ):
         with BuildLine():
             Polyline(MAIN_PTS_OUTER)
             mirror(about=Plane.YZ)
         make_face()
-
     extrude(amount=PCB_DEPTH)
 
+    # Remove interior
     with BuildSketch(Plane.XZ):
         with BuildLine():
             Polyline(MAIN_PTS_INNER)
         make_face()
     extrude(amount=PCB_DEPTH, mode=Mode.SUBTRACT)
 
+    # Antenna part
     with BuildSketch(Plane.XZ.offset(PCB_DEPTH)):
         with BuildLine():
             Polyline(MAIN_PTS_OUTER)
@@ -80,11 +82,13 @@ with BuildPart() as dongle_case:
         make_face()
     extrude(amount=ANTENNA_DEPTH)
 
+    # Remove interior / space for Antenna
     with BuildSketch(Plane.XZ.offset(PCB_DEPTH)):
         with Locations((0, WALL_THICKNESS_AROUND + DONGLE_HEIGHT / 2 + TOLERANCE_HEIGHT)):
             Rectangle(ANTENNA_WIDTH, DONGLE_HEIGHT + 2 * TOLERANCE_HEIGHT)
     extrude(amount=ANTENNA_DEPTH, mode=Mode.SUBTRACT)
 
+    # End-wall
     with BuildSketch(Plane.XZ.offset(PCB_DEPTH + ANTENNA_DEPTH)):
         with BuildLine():
             Polyline(MAIN_PTS_OUTER)
@@ -92,21 +96,24 @@ with BuildPart() as dongle_case:
         make_face()
     extrude(amount=WALL_THICKNESS_END)
 
+    # Ejection holes
     with BuildSketch(Plane.XZ.offset(PCB_DEPTH)):
         with Locations((-ANTENNA_WIDTH / 2 - 1.5, WALL_THICKNESS_AROUND + EJECTION_HOLE_SIZE / 2 + 0.1),
                 (ANTENNA_WIDTH / 2 + 1.5, WALL_THICKNESS_AROUND + EJECTION_HOLE_SIZE / 2 + 0.1)):
             Rectangle(EJECTION_HOLE_SIZE, EJECTION_HOLE_SIZE + 0.2)
-
     extrude(both=True, amount=-ANTENNA_DEPTH - WALL_THICKNESS_END, mode=Mode.SUBTRACT)
 
+    # Cuts to make bottom flexible => can press PCB + button against top
     with Locations((-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH / 2, -BUTTON_INSET_USB / 2 - 10, WALL_THICKNESS_AROUND / 2),
             (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUTTON_CUT_WIDTH / 2, 0, WALL_THICKNESS_AROUND / 2)):
         Box(BUTTON_CUT_WIDTH, BUTTON_INSET_USB + 20, WALL_THICKNESS_AROUND, mode=Mode.SUBTRACT)
 
+    # Bumps to hold PCB in place
     with Locations((-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH / 2 + BUMP_WIDTH / 2, -PCB_THICKNESS/2 - BUMP_WIDTH/2 + 1, WALL_THICKNESS_AROUND + PCB_THICKNESS / 4),
             (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUTTON_CUT_WIDTH / 2 - BUMP_WIDTH / 2, -PCB_THICKNESS/2 - BUMP_WIDTH/2 + 1, WALL_THICKNESS_AROUND + PCB_THICKNESS / 4)):
          Cylinder(PCB_THICKNESS / 2, BUMP_WIDTH - BUTTON_CUT_WIDTH, rotation=(0, 90, 90), arc_size=180)
 
+    # Half cylinder
     with BuildSketch(Plane.XZ.offset(BUMP_WIDTH/2 - 1)):
         with BuildLine():
             Polyline((PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUTTON_CUT_WIDTH, WALL_THICKNESS_AROUND),
@@ -116,6 +123,7 @@ with BuildPart() as dongle_case:
         make_face()
     extrude(amount=PCB_THICKNESS, mode=Mode.SUBTRACT)
 
+    # Subtract PCB cutouts
     with BuildSketch(Plane.XZ.offset(BUMP_WIDTH/2 - 1)):
         with BuildLine():
             Polyline((-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH, WALL_THICKNESS_AROUND),
@@ -124,7 +132,6 @@ with BuildPart() as dongle_case:
             (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH, WALL_THICKNESS_AROUND))
         make_face()
     extrude(amount=PCB_THICKNESS, mode=Mode.SUBTRACT)
-
 
     with BuildSketch(Plane.XZ.offset(BUMP_WIDTH/2 - 1)):
         with BuildLine():

@@ -53,18 +53,24 @@ with BuildPart() as chex:
                 Polyline(points)
                 mirror(about=Plane.YZ)
             make_face()
-        extrude(amount=TRAPEZ_THICKNESS, mode=Mode.SYMMETRIC)
+        extrude(amount=TRAPEZ_THICKNESS/2, both=True)
     with Locations((0, 0, BASE_Z_LEN)):
         add(trapezoid_pt, rotation=(0, 0, -45))
         add(trapezoid_pt, rotation=(0, 0, 45))
 
     # Tabs (to prevent wrong insertion).
-    with BuildSketch(Plane.XY.offset(TRAPEZ_Z_LEN)):
-        cos45 = math.cos(math.radians(45))
-        width = (cos45 * TRAPEZ_TIP) + (cos45 * TRAPEZ_THICKNESS/2)
-        height = TRAPEZ_TIP - TRAPEZ_THICKNESS
-        Rectangle(width*2, height*2)
-    extrude(amount=-TABS_Z_LEN)
+    tab_z = TRAPEZ_Z_LEN - TABS_Z_LEN
+    normal = Axis(origin=(0,0,0), direction=(1,1,0))
+    face1 = (chex.faces()
+        .filter_by(normal)[1]
+        .split(Plane.XY.offset(tab_z), keep=Keep.TOP)
+    )
+    face2 = (chex.faces()
+        .filter_by(normal)[3]
+        .split(Plane.XY.offset(tab_z), keep=Keep.TOP)
+    )
+    extrude(face1, until=Until.NEXT, dir=(0,1,0))
+    extrude(face2, until=Until.NEXT, dir=(0,-1,0))
 
 
 if __name__ == '__main__':

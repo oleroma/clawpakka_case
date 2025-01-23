@@ -6,6 +6,7 @@ from build123d import (
 SHAFT_RADIUS = 3
 SHAFT_TOLERANCE = 0.1
 SHAFT_Z = 13
+SHAFT_TOP_CHAMFER = 0.5
 
 BRIDGE_Z = 9.4
 BRIDGE_RELIEF_Z = 0.9  # Cut-out to avoid potential 3D-printed overhangs.
@@ -72,6 +73,8 @@ with BuildPart() as internal:
     with BuildSketch():
         Circle(SHAFT_RADIUS - SHAFT_TOLERANCE)
     extrude(amount=SHAFT_Z - TOLERANCE_Z)
+    shaft_top = faces().filter_by(Axis.Z).sort_by(Axis.Z).edges()[-1]
+    chamfer(shaft_top, SHAFT_TOP_CHAMFER)
     # Bridge.
     with BuildSketch():
         with BuildLine():

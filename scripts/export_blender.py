@@ -130,7 +130,7 @@ entries = [
     Entry('DHat',             '015mm_dhat'),
     Entry('Case back',        '015mm_back', '-Z'),
     Entry('Home',             '007mm_home', rotate=True),
-    Entry('Thumbstick',       '007mm_thumbstick', tolerance=True),
+    Entry('Thumbstick',       '007mm_thumbstick_L', tolerance=True),
     Entry('Anchor',           '015mm_anchors_2x', '-Z', split=True),
     Entry('Soldering helper', '020mm_solderstand', '-Z', merge=True),
 ]

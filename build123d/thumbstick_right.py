@@ -1,16 +1,16 @@
 from build123d import *
 
-NECK_HEIGHT = 8.5
-NECK_RADIUS = 2.5
+TOTAL_HEIGHT = 8.5
 
 HEAD_RADIUS = 4
 HEAD_TALL = 2
-HEAD_CHAMFER = 0.5
+HEAD_CHAMFER = 0.4
+NECK_RADIUS = 2.5
 
 DOME_RADIUS = 12
-DOME_CUT = DOME_RADIUS - 1.75
+DOME_TOP_HEIGHT = 1.9
 
-HOLE_TOLERANCE_XY = 0.12
+HOLE_TOLERANCE_XY = 0.1
 HOLE_TOLERANCE_Z = 0.5
 HOLE_RADIUS = 2 + HOLE_TOLERANCE_XY
 HOLE_CUT = 1.5 + HOLE_TOLERANCE_XY
@@ -19,29 +19,31 @@ HOLE_DEPTH = 5 + HOLE_TOLERANCE_Z
 
 with BuildPart() as thumbstick_right:
     # Dome.
-    with BuildSketch(Plane.XZ) as dome_external:
-        Circle(radius=DOME_RADIUS)
-        split(bisect_by=Plane.XZ.offset(-DOME_CUT), keep=Keep.BOTTOM)
-        split(bisect_by=Plane.YZ)
+    with BuildSketch(Plane.XZ) as dome:
+        with Locations((0, -DOME_RADIUS + DOME_TOP_HEIGHT)):
+            Circle(radius=DOME_RADIUS)
+            split(bisect_by=Plane.XZ, keep=Keep.BOTTOM)
+            split(bisect_by=Plane.YZ)
 
     # Neck and head.
     with BuildSketch(Plane.XZ) as shaft:
-        with Locations((0, DOME_CUT)):
-            Rectangle(NECK_RADIUS, NECK_HEIGHT, align=Align.MIN)
-            with BuildLine(Location((0, DOME_CUT))) as head:
-                Polyline(
-                    (0,           NECK_HEIGHT),
-                    (HEAD_RADIUS, NECK_HEIGHT),
-                    (HEAD_RADIUS, NECK_HEIGHT - HEAD_TALL),
-                    (0,           NECK_HEIGHT - HEAD_TALL - HEAD_RADIUS),
-                )
-            make_face()
+        # Neck.
+        Rectangle(NECK_RADIUS, TOTAL_HEIGHT, align=Align.MIN)
+        # Head.
+        with BuildLine():
+            Polyline(
+                (0,           TOTAL_HEIGHT),
+                (HEAD_RADIUS, TOTAL_HEIGHT),
+                (HEAD_RADIUS, TOTAL_HEIGHT - HEAD_TALL),
+                (0,           TOTAL_HEIGHT - HEAD_TALL - HEAD_RADIUS),
+            )
+        make_face()
 
     # Make 3D.
     revolve(axis=Axis.Z)
 
     # Remove hole.
-    with BuildSketch(Plane.XY.offset(DOME_CUT)) as hole:
+    with BuildSketch(Plane.XY) as hole:
         Circle(radius=HOLE_RADIUS)
         Rectangle(HOLE_RADIUS * 2, HOLE_CUT * 2, mode=Mode.INTERSECT)
     extrude(amount=HOLE_DEPTH, mode=Mode.SUBTRACT)

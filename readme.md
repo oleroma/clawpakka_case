@@ -33,8 +33,8 @@ To use Git with this project it is required to install Git [Large File Storage](
 ## Parts hierarchy
 
 ```
-.blend` => Blender
-.py` => Build123d
+.blend => Blender
+.py => Build123d
 ```
 
 ### Main assembly

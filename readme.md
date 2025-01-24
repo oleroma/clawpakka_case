@@ -16,6 +16,7 @@
 <span><img width='250px' src='./preview/print_D.png'/></span>
 <span><img width='250px' src='./preview/print_E.png'/></span>
 <span><img width='250px' src='./preview/print_F.png'/></span>
+<br>*(Previews might be outdated)*
 
 ## Dependencies
 - Git LFS.

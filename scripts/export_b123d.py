@@ -13,6 +13,7 @@ from wheel_holder import holder
 from trigger_r1 import trigger_r1
 from cover import cover
 from hexagon import chex
+from dongle_case import dongle_case
 
 STL_DIR = 'stl/'
 STEP_DIR = 'step/'
@@ -44,3 +45,6 @@ export(chex.part, 'conductive_015mm_hexagon')
 
 # Thumbstick right.
 export(thumbstick_right.part, 'secondary_007mm_thumbstick_R')
+
+# Dongle case.
+export(dongle_case.part, '015mm_dongle_case')

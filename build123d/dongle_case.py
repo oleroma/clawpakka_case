@@ -1,61 +1,52 @@
 from build123d import (
-    BuildPart, BuildSketch, BuildLine, Polyline, Plane, Rectangle, Location,
-    Locations, Mode, Axis, Cylinder, Line, JernArc, RadiusArc, Spline, Circle, Transition, Box, Align,
-    Until,
-    extrude, mirror, make_face, loft, export_stl, offset, vertices, fillet, sweep
+    BuildPart, BuildSketch, BuildLine, Polyline, Plane, Rectangle, Locations,
+    Mode, Circle, Align, extrude, mirror, make_face
 )
 
-from ocp_vscode import set_defaults, Camera, show_object
-
-from math import sin, radians
-
-WALL_THICKNESS_AROUND = 1.2
-WALL_THICKNESS_END = 0.5
+THICKNESS_AROUND = 1.2
+THICKNESS_END = 0.5
 
 PCB_WIDTH = 21.8
 PCB_DEPTH = 46.9
-DONGLE_HEIGHT = 4.12 # @ button
 PCB_THICKNESS = 1.65
 
+DONGLE_HEIGHT = 4.12 # @ button
+INSET = DONGLE_HEIGHT - PCB_THICKNESS
+
 TOLERANCE_WIDTH = +0.35
-TOLERANCE_DEPTH = +0.1
 TOLERANCE_HEIGHT = +0.1
 
 ANTENNA_WIDTH = 13.2 + 0.75 # measured + tolerance
-ANTENNA_THICKNESS = 0.8 + 0.2
 ANTENNA_DEPTH = 5.2 + 0.1
-
-
-INSET = DONGLE_HEIGHT - PCB_THICKNESS
-
-MAIN_PTS_OUTER = ((0, 0),
-    (PCB_WIDTH / 2 + TOLERANCE_WIDTH + WALL_THICKNESS_AROUND, 0),
-    (PCB_WIDTH / 2 + TOLERANCE_WIDTH + WALL_THICKNESS_AROUND, WALL_THICKNESS_AROUND + PCB_THICKNESS + 2 * TOLERANCE_HEIGHT),
-    (PCB_WIDTH / 2 + TOLERANCE_WIDTH - INSET, DONGLE_HEIGHT + 2 * TOLERANCE_HEIGHT + 2 * WALL_THICKNESS_AROUND),
-    (0, DONGLE_HEIGHT + 2 * TOLERANCE_HEIGHT + 2 * WALL_THICKNESS_AROUND))
-
-# Not symetric due to button => Need to specify all points
-MAIN_PTS_INNER = ((-PCB_WIDTH / 2 - TOLERANCE_WIDTH, WALL_THICKNESS_AROUND),
-    (PCB_WIDTH / 2 + TOLERANCE_WIDTH, WALL_THICKNESS_AROUND),
-    (PCB_WIDTH / 2 + TOLERANCE_WIDTH, PCB_THICKNESS + WALL_THICKNESS_AROUND + 2 * TOLERANCE_HEIGHT),
-    (PCB_WIDTH / 2 - INSET / 2 + TOLERANCE_WIDTH, DONGLE_HEIGHT + WALL_THICKNESS_AROUND - INSET / 2 + 2 * TOLERANCE_HEIGHT),
-    (PCB_WIDTH / 2 - INSET * 1.5, DONGLE_HEIGHT + WALL_THICKNESS_AROUND + 2 * TOLERANCE_HEIGHT),
-    (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + INSET, DONGLE_HEIGHT + WALL_THICKNESS_AROUND + 2 * TOLERANCE_HEIGHT),
-    (-PCB_WIDTH / 2 - TOLERANCE_WIDTH, PCB_THICKNESS + WALL_THICKNESS_AROUND + 2 * TOLERANCE_HEIGHT),
-    (-PCB_WIDTH / 2 - TOLERANCE_WIDTH, WALL_THICKNESS_AROUND - TOLERANCE_HEIGHT))
-
-
-BUTTON_INSET_USB = 11.2 # inset from the USB
-BUTTON_WIDTH = 3.2
-BUTTON_INSET_PCB = 1.5 # inset from the edge of the PCB
-BUTTON_DEPTH = 4.2
-
-BUTTON_CUT_WIDTH = 0.3 #0.25
-BUTTON_CUT_DEPTH = WALL_THICKNESS_AROUND - 0.2
 
 EJECTION_HOLE_SIZE = 2.3 # slightly larger than hex-key
 
+CUT_WIDTH = 0.3
+CUT_LONG = 31.2
+CUT_SHORT = 15.6
+
 BUMP_WIDTH = 4
+BUMP_OFFSET = 1
+
+MAIN_PTS_OUTER = (
+    (0, 0),
+    (PCB_WIDTH/2 + TOLERANCE_WIDTH + THICKNESS_AROUND, 0),
+    (PCB_WIDTH/2 + TOLERANCE_WIDTH + THICKNESS_AROUND, THICKNESS_AROUND + PCB_THICKNESS + 2 * TOLERANCE_HEIGHT),
+    (PCB_WIDTH/2 + TOLERANCE_WIDTH - INSET, DONGLE_HEIGHT + 2 * TOLERANCE_HEIGHT + 2 * THICKNESS_AROUND),
+    (0, DONGLE_HEIGHT + 2 * TOLERANCE_HEIGHT + 2 * THICKNESS_AROUND)
+)
+
+# Not symmetric due to button => Need to specify all points
+MAIN_PTS_INNER = (
+    (-PCB_WIDTH/2 - TOLERANCE_WIDTH, THICKNESS_AROUND),
+    ( PCB_WIDTH/2 + TOLERANCE_WIDTH, THICKNESS_AROUND),
+    ( PCB_WIDTH/2 + TOLERANCE_WIDTH, PCB_THICKNESS + THICKNESS_AROUND + 2 * TOLERANCE_HEIGHT),
+    ( PCB_WIDTH/2 - INSET/2 + TOLERANCE_WIDTH, DONGLE_HEIGHT + THICKNESS_AROUND - INSET/2 + 2 * TOLERANCE_HEIGHT),
+    ( PCB_WIDTH/2 - INSET*1.5, DONGLE_HEIGHT + THICKNESS_AROUND + 2 * TOLERANCE_HEIGHT),
+    (-PCB_WIDTH/2 - TOLERANCE_WIDTH + INSET, DONGLE_HEIGHT + THICKNESS_AROUND + 2 * TOLERANCE_HEIGHT),
+    (-PCB_WIDTH/2 - TOLERANCE_WIDTH, PCB_THICKNESS + THICKNESS_AROUND + 2 * TOLERANCE_HEIGHT),
+    (-PCB_WIDTH/2 - TOLERANCE_WIDTH, THICKNESS_AROUND - TOLERANCE_HEIGHT)
+)
 
 
 with BuildPart() as dongle_case:
@@ -65,7 +56,8 @@ with BuildPart() as dongle_case:
             Polyline(MAIN_PTS_OUTER)
             mirror(about=Plane.YZ)
         make_face()
-    extrude(amount=PCB_DEPTH)
+    total_depth = PCB_DEPTH + ANTENNA_DEPTH + THICKNESS_END
+    extrude(amount=total_depth)
 
     # Remove interior
     with BuildSketch(Plane.XZ):
@@ -74,115 +66,61 @@ with BuildPart() as dongle_case:
         make_face()
     extrude(amount=PCB_DEPTH, mode=Mode.SUBTRACT)
 
-    # Antenna part
+    # Remove space for Antenna
     with BuildSketch(Plane.XZ.offset(PCB_DEPTH)):
-        with BuildLine():
-            Polyline(MAIN_PTS_OUTER)
-            mirror(about=Plane.YZ)
-        make_face()
-    extrude(amount=ANTENNA_DEPTH)
-
-    # Remove interior / space for Antenna
-    with BuildSketch(Plane.XZ.offset(PCB_DEPTH)):
-        with Locations((0, WALL_THICKNESS_AROUND + DONGLE_HEIGHT / 2 + TOLERANCE_HEIGHT)):
+        z = THICKNESS_AROUND + DONGLE_HEIGHT/2 + TOLERANCE_HEIGHT
+        with Locations((0, z)):
             Rectangle(ANTENNA_WIDTH, DONGLE_HEIGHT + 2 * TOLERANCE_HEIGHT)
-    extrude(amount=ANTENNA_DEPTH, mode=Mode.SUBTRACT)
-
-    # End-wall
-    with BuildSketch(Plane.XZ.offset(PCB_DEPTH + ANTENNA_DEPTH)):
-        with BuildLine():
-            Polyline(MAIN_PTS_OUTER)
-            mirror(about=Plane.YZ)
-        make_face()
-    extrude(amount=WALL_THICKNESS_END)
+    extrude_amount = ANTENNA_DEPTH
+    extrude(amount=extrude_amount, mode=Mode.SUBTRACT)
 
     # Ejection holes
     with BuildSketch(Plane.XZ.offset(PCB_DEPTH)):
-        with Locations((-ANTENNA_WIDTH / 2 - 1.5, WALL_THICKNESS_AROUND + EJECTION_HOLE_SIZE / 2 + 0.1),
-                (ANTENNA_WIDTH / 2 + 1.5, WALL_THICKNESS_AROUND + EJECTION_HOLE_SIZE / 2 + 0.1)):
+        z = THICKNESS_AROUND + EJECTION_HOLE_SIZE / 2 + 0.1
+        location1 = (-ANTENNA_WIDTH / 2 - 1.5, z)
+        location2 = ( ANTENNA_WIDTH / 2 + 1.5, z)
+        with Locations(location1, location2):
             Rectangle(EJECTION_HOLE_SIZE, EJECTION_HOLE_SIZE + 0.2)
-    extrude(both=True, amount=-ANTENNA_DEPTH - WALL_THICKNESS_END, mode=Mode.SUBTRACT)
+    extrude_amount = -ANTENNA_DEPTH - THICKNESS_END
+    extrude(amount=extrude_amount, both=True, mode=Mode.SUBTRACT)
 
     # Cuts to make bottom flexible => can press PCB + button against top
-    with Locations((-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH / 2, -BUTTON_INSET_USB / 2 - 10, WALL_THICKNESS_AROUND / 2),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUTTON_CUT_WIDTH / 2, 0, WALL_THICKNESS_AROUND / 2)):
-        Box(BUTTON_CUT_WIDTH, BUTTON_INSET_USB + 20, WALL_THICKNESS_AROUND, mode=Mode.SUBTRACT)
+    x = PCB_WIDTH/2 + TOLERANCE_WIDTH
+    with BuildSketch(Plane.XZ):  # Short cut.
+        with Locations((x, 0)):
+            Rectangle(CUT_WIDTH, THICKNESS_AROUND, align=(Align.MAX, Align.MIN))
+    extrude(amount=CUT_SHORT, mode=Mode.SUBTRACT)
+    with BuildSketch(Plane.XZ):  # Long cut.
+        with Locations((-x, 0)):
+            Rectangle(CUT_WIDTH, THICKNESS_AROUND, align=(Align.MIN, Align.MIN))
+    extrude(amount=CUT_LONG, mode=Mode.SUBTRACT)
 
-    # Bumps to hold PCB in place
-    with Locations((-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH / 2 + BUMP_WIDTH / 2, -PCB_THICKNESS/2 - BUMP_WIDTH/2 + 1, WALL_THICKNESS_AROUND + PCB_THICKNESS / 4),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUTTON_CUT_WIDTH / 2 - BUMP_WIDTH / 2, -PCB_THICKNESS/2 - BUMP_WIDTH/2 + 1, WALL_THICKNESS_AROUND + PCB_THICKNESS / 4)):
-         Cylinder(PCB_THICKNESS / 2, BUMP_WIDTH - BUTTON_CUT_WIDTH, rotation=(0, 90, 90), arc_size=180)
+    # Bump to hold PCB in place.
+    with BuildSketch(Plane.YZ):
+        y = -PCB_THICKNESS/2 - BUMP_WIDTH/2 + BUMP_OFFSET
+        z = THICKNESS_AROUND
+        with Locations((y, z)):
+            Circle(PCB_THICKNESS/2)
+    extrude_amount = PCB_WIDTH/2 + TOLERANCE_WIDTH - CUT_WIDTH
+    extrude(amount=extrude_amount, both=True)
 
-    # Half cylinder
-    with BuildSketch(Plane.XZ.offset(BUMP_WIDTH/2 - 1)):
+    # Bump cut with the PCB shape.
+    with BuildSketch(Plane.XY.offset(THICKNESS_AROUND)) as xxx1:
         with BuildLine():
-            Polyline((PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUTTON_CUT_WIDTH, WALL_THICKNESS_AROUND),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUTTON_CUT_WIDTH - PCB_THICKNESS / 2, WALL_THICKNESS_AROUND + PCB_THICKNESS / 2),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUTTON_CUT_WIDTH, WALL_THICKNESS_AROUND + PCB_THICKNESS / 2),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUTTON_CUT_WIDTH, WALL_THICKNESS_AROUND))
-        make_face()
-    extrude(amount=PCB_THICKNESS, mode=Mode.SUBTRACT)
-
-    # Subtract PCB cutouts
-    with BuildSketch(Plane.XZ.offset(BUMP_WIDTH/2 - 1)):
-        with BuildLine():
-            Polyline((-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH, WALL_THICKNESS_AROUND),
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH + PCB_THICKNESS / 2, WALL_THICKNESS_AROUND + PCB_THICKNESS / 2),
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH, WALL_THICKNESS_AROUND + PCB_THICKNESS / 2),
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUTTON_CUT_WIDTH, WALL_THICKNESS_AROUND))
-        make_face()
-    extrude(amount=PCB_THICKNESS, mode=Mode.SUBTRACT)
-
-    with BuildSketch(Plane.XZ.offset(BUMP_WIDTH/2 - 1)):
-        with BuildLine():
-            Polyline((PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUMP_WIDTH, WALL_THICKNESS_AROUND),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUMP_WIDTH + PCB_THICKNESS / 2, WALL_THICKNESS_AROUND + PCB_THICKNESS / 2),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUMP_WIDTH, WALL_THICKNESS_AROUND + PCB_THICKNESS / 2),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUMP_WIDTH, WALL_THICKNESS_AROUND))
-        make_face()
-    extrude(amount=PCB_THICKNESS, mode=Mode.SUBTRACT)
-
-    with BuildSketch(Plane.XZ.offset(BUMP_WIDTH/2 - 1)):
-        with BuildLine():
+            x = PCB_WIDTH/2 + TOLERANCE_WIDTH - BUMP_WIDTH
+            y = -BUMP_WIDTH/2 - PCB_THICKNESS + BUMP_OFFSET
             Polyline(
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUMP_WIDTH, WALL_THICKNESS_AROUND),
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUMP_WIDTH - PCB_THICKNESS / 2, WALL_THICKNESS_AROUND + PCB_THICKNESS / 2),
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUMP_WIDTH, WALL_THICKNESS_AROUND + PCB_THICKNESS / 2),
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUMP_WIDTH, WALL_THICKNESS_AROUND))
+                ( x + PCB_THICKNESS, y),
+                (-x - PCB_THICKNESS, y),
+                (-x,                 y + PCB_THICKNESS),
+                ( x,                 y + PCB_THICKNESS),
+                ( x + PCB_THICKNESS, y)
+            )
         make_face()
-    extrude(amount=PCB_THICKNESS, mode=Mode.SUBTRACT)
+    extrude(amount=PCB_THICKNESS/2, mode=Mode.SUBTRACT)
 
 
-    with BuildSketch(Plane.XY.offset(WALL_THICKNESS_AROUND)):
-        with BuildLine():
-            Polyline(
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUMP_WIDTH - PCB_THICKNESS, -BUMP_WIDTH/2 - 0.7),
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUMP_WIDTH, -BUMP_WIDTH/2 - 0.7),
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUMP_WIDTH, -BUMP_WIDTH/2 - 0.7 + PCB_THICKNESS),
-            (-PCB_WIDTH / 2 - TOLERANCE_WIDTH + BUMP_WIDTH - PCB_THICKNESS, -BUMP_WIDTH/2 - 0.7))
-        make_face()
-    extrude(amount=PCB_THICKNESS / 2, mode=Mode.SUBTRACT)
-
-    with BuildSketch(Plane.XY.offset(WALL_THICKNESS_AROUND)):
-        with BuildLine():
-            Polyline(
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUMP_WIDTH + PCB_THICKNESS, -BUMP_WIDTH/2 - 0.7),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUMP_WIDTH, -BUMP_WIDTH/2 - 0.7),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUMP_WIDTH, -BUMP_WIDTH/2 - 0.7 + PCB_THICKNESS),
-            (PCB_WIDTH / 2 + TOLERANCE_WIDTH - BUMP_WIDTH + PCB_THICKNESS, -BUMP_WIDTH/2 - 0.7))
-        make_face()
-    extrude(amount=PCB_THICKNESS / 2, mode=Mode.SUBTRACT)
-
-
-
-# __main__ => show in VSCode
-# temp     => show in CQEditor
-if __name__ in ['__main__', 'temp']:
-    if __name__ == '__main__':
-        from ocp_vscode import show_object
-        set_defaults(reset_camera=Camera.KEEP)
+if __name__ == '__main__':
+    from common.vscode import show_object
     show_object(dongle_case)
-
     print(f"Volume: {dongle_case.part.volume}")
-
-##    export_stl(dongle_case.part, "dongle_case.stl")

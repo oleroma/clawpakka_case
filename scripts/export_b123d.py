@@ -24,27 +24,27 @@ def export(obj, filename):
     export_step(obj, STEP_DIR + filename + '.step')
 
 # Buttons.
-export(button_abxy.part, 'secondary_007mm_abxy_4x')
-export(button_dpad.part, 'secondary_007mm_dpad_4x')
-export(button_select.part, 'primary_007mm_select_4x')
+export(button_abxy.part, '007mm_abxy_4x')
+export(button_dpad.part, '007mm_dpad_4x')
+export(button_select.part, '007mm_select_4x')
 
 # Trigger L1/R1.
-export(trigger_r1.part, 'primary_015mm_trigger_R1')
-export(trigger_r1.part.mirror(Plane.YZ), 'primary_015mm_trigger_L1')
+export(trigger_r1.part, '015mm_trigger_R1')
+export(trigger_r1.part.mirror(Plane.YZ), '015mm_trigger_L1')
 
 # Scroll wheel.
-export(wheel.part, 'secondary_015mm_wheel')
-export(core.part.rotate(Axis.X, 90), 'any_007mm_wheel_core')
-export(holder.part, 'any_015mm_wheel_holder')
+export(wheel.part, '015mm_wheel')
+export(core.part.rotate(Axis.X, 90), '007mm_wheel_core')
+export(holder.part, '015mm_wheel_holder')
 
 # Battery Cover.
-export(cover.part, 'secondary_015mm_cover')
+export(cover.part, '015mm_cover')
 
 # Conductive Hex.
-export(chex.part, 'conductive_015mm_hexagon')
+export(chex.part, '015mm_hexagon_CONDUCTIVE')
 
 # Thumbstick right.
-export(thumbstick_right.part, 'secondary_007mm_thumbstick_R')
+export(thumbstick_right.part, '007mm_thumbstick_R')
 
 # Dongle case.
 export(dongle_case.part, '015mm_dongle_case')

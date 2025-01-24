@@ -31,7 +31,6 @@ blend:
 	$(BLENDER) blender/anchor.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/thumbstick.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/button_home.blend --background --python scripts/export_blender.py
-	$(BLENDER) blender/hexagon.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/soldering_stand.blend --background --python scripts/export_blender.py
 
 b123d:

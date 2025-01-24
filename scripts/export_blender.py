@@ -123,16 +123,16 @@ class Entry:
 
 
 entries = [
-    Entry('Case front',       'primary_015mm_front'),
-    Entry('R1',               'primary_015mm_trigger_R1', split=True, mirror=True),
-    Entry('R2',               'primary_015mm_trigger_R2', '-Z', split=True, mirror=True),
-    Entry('R4',               'primary_015mm_trigger_R4', '-Y', '-Z', split=True, mirror=True),
-    Entry('DHat',             'primary_015mm_dhat'),
-    Entry('Case back',        'secondary_015mm_back', '-Z'),
-    Entry('Home',             'secondary_007mm_home', rotate=True),
-    Entry('Thumbstick',       'secondary_007mm_thumbstick', tolerance=True),
-    Entry('Anchor',           'any_015mm_anchors_2x', '-Z', split=True),
-    Entry('Soldering helper', 'any_020mm_solderstand', '-Z', merge=True),
+    Entry('Case front',       '015mm_front'),
+    Entry('R1',               '015mm_trigger_R1', split=True, mirror=True),
+    Entry('R2',               '015mm_trigger_R2', '-Z', split=True, mirror=True),
+    Entry('R4',               '015mm_trigger_R4', '-Y', '-Z', split=True, mirror=True),
+    Entry('DHat',             '015mm_dhat'),
+    Entry('Case back',        '015mm_back', '-Z'),
+    Entry('Home',             '007mm_home', rotate=True),
+    Entry('Thumbstick',       '007mm_thumbstick_L', tolerance=True),
+    Entry('Anchor',           '015mm_anchors_2x', '-Z', split=True),
+    Entry('Soldering helper', '020mm_solderstand', '-Z', merge=True),
 ]
 
 for collection in bpy.data.collections:

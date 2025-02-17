@@ -20,7 +20,7 @@ RIGHT_HOLE_DEPTH = 4.5
 LEFT_HOLE_WIDTH = 9
 LEFT_HOLE_UNDER_WIDTH = 5.5
 LEFT_HOLE_DEPTH = WHEEL_WIDTH - RIGHT_HOLE_DEPTH
-LEFT_HOLE_CHAMFER = 0.5
+LEFT_HOLE_TOLERANCE = 0.10
 
 with BuildPart() as wheel:
     with BuildSketch():
@@ -55,8 +55,10 @@ with BuildPart() as wheel:
     # Left aperture (in which the core is inserted).
     with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)):
         with Locations(Rotation(0, 0, 45)):
-            Rectangle(LEFT_HOLE_WIDTH, LEFT_HOLE_WIDTH)
-        split(bisect_by=Plane.XZ.offset(HEX_DIAMETER_SHORT/2), keep=Keep.BOTTOM)
+            side = LEFT_HOLE_WIDTH + (LEFT_HOLE_TOLERANCE*2)
+            Rectangle(side, side)
+        cut = Plane.XZ.offset((HEX_DIAMETER_SHORT/2) + LEFT_HOLE_TOLERANCE)
+        split(bisect_by=cut, keep=Keep.BOTTOM)
         with Locations(Rotation(0, 0, 45)):
             Rectangle(LEFT_HOLE_UNDER_WIDTH, LEFT_HOLE_UNDER_WIDTH)
     extrude(amount=-LEFT_HOLE_DEPTH, mode=Mode.SUBTRACT)

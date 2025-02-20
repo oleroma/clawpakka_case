@@ -34,6 +34,9 @@ blend:
 	$(BLENDER) blender/thumbstick.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/button_home.blend --background --python scripts/export_blender.py
 	$(BLENDER) blender/soldering_stand.blend --background --python scripts/export_blender.py
+	# Variants.
+	mv stl/007mm_thumbstick_L_loose.stl stl/007mm_thumbstick_L.stl
+	mv stl/007mm_thumbstick_L_tight.stl stl/variants/007mm_thumbstick_L_tight.stl
 
 b123d:
 	python3 scripts/export_b123d.py

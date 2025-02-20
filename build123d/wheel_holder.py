@@ -4,10 +4,11 @@ from wheel import RIGHT_HOLE_RADIUS as AXLE_RADIUS
 AXLE_LEN = 1.5
 AXLE_X_OFFSET = 0.5
 AXLE_Y_OFFSET = 11
+AXLE_CHAMFER = 0.3
 
 BODY_X_LEN = 18
-BODY_Z_LEN = 3.5
-BODY_Y_TOLERANCE = 0
+BODY_Z_LEN = 3.1  # Adjust axis left/right (positive = to the left).
+BODY_Y_TOLERANCE = -0.10  # Adjust axis height (negative = higher).
 
 SEPARATOR_X_LEN = 12.5
 SEPARATOR_Z_LEN = 0.5
@@ -18,7 +19,7 @@ BLOCK_Y = 15
 BLOCK_Y_OFFSET = 0.3
 
 CHAMFER_Y = 0.8
-CHAMFER_Z = 3.1
+CHAMFER_Z = 2.9
 
 # Translated plane by X offset.
 workplane = Plane(origin=(AXLE_X_OFFSET, 0))
@@ -70,6 +71,10 @@ with BuildPart() as holder:
     with BuildSketch():
         Circle(AXLE_RADIUS)
     extrude(amount=AXLE_LEN)
+
+    # Axle chamfer.
+    edge = edges().group_by(Axis.Z, reverse=True)[0]
+    chamfer(edge, AXLE_CHAMFER)
 
 
 if __name__ == '__main__':

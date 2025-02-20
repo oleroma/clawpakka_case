@@ -5,8 +5,8 @@ from wheel import (
     HEX_DIAMETER,
     HEX_DIAMETER_SHORT,
     WHEEL_WIDTH,
-    LEFT_HOLE_WIDTH,
-    LEFT_HOLE_DEPTH,
+    LEFT_SLOT_WIDTH,
+    LEFT_SLOT_DEPTH,
 )
 
 HEX_LEN = 8
@@ -22,10 +22,10 @@ with BuildPart() as core:
 
     # Body.
     with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)):
-        Circle(LEFT_HOLE_WIDTH / 2)
+        Circle(LEFT_SLOT_WIDTH / 2)
         cutplane = Plane.XZ.offset(HEX_DIAMETER_SHORT / 2)
         split(bisect_by=cutplane, keep=Keep.BOTTOM)
-    extrude(amount=-LEFT_HOLE_DEPTH)
+    extrude(amount=-LEFT_SLOT_DEPTH)
 
     # Spacer.
     with BuildSketch(Plane.XY.offset(WHEEL_WIDTH)):

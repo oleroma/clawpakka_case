@@ -7,7 +7,7 @@ from button_dpad import button_dpad
 from button_abxy import button_abxy
 from button_select import button_select
 from thumbstick_right import thumbstick_right
-from wheel import wheel
+from wheel import wheel_default, wheel_loose, wheel_tight
 from wheel_core import core
 from wheel_holder import holder
 from trigger_r1 import trigger_r1
@@ -18,10 +18,10 @@ from dongle_case import dongle_case
 STL_DIR = 'stl/'
 STEP_DIR = 'step/'
 
-def export(obj, filename):
-    print(f'Exporting {filename}')
-    export_stl(obj, STL_DIR + filename + '.stl')
-    export_step(obj, STEP_DIR + filename + '.step')
+def export(obj, filename, subdir=''):
+    print(f'Exporting {subdir}{filename}')
+    export_stl(obj, STL_DIR + subdir + filename + '.stl')
+    export_step(obj, STEP_DIR + subdir + filename + '.step')
 
 # Buttons.
 export(button_abxy.part, '007mm_abxy_4x')
@@ -33,7 +33,9 @@ export(trigger_r1.part, '015mm_trigger_R1')
 export(trigger_r1.part.mirror(Plane.YZ), '015mm_trigger_L1')
 
 # Scroll wheel.
-export(wheel.part, '015mm_wheel')
+export(wheel_default.part, '015mm_wheel')
+export(wheel_loose.part, '015mm_wheel_loose', 'variants/')
+export(wheel_tight.part, '015mm_wheel_tight', 'variants/')
 export(core.part.rotate(Axis.X, 90), '007mm_wheel_core')
 export(holder.part, '015mm_wheel_holder')
 

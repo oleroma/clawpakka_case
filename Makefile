@@ -12,7 +12,7 @@ release: stl
 	mkdir -p release/
 	zip -u release/blender.zip blender/*.blend
 	zip -u release/stl.zip stl/*.stl stl/**/*.stl
-	zip -u release/step.zip step/*.step stl/**/*.step
+	zip -u release/step.zip step/*.step step/**/*.step
 
 clean:
 	rm -rf release/*
@@ -20,6 +20,8 @@ clean:
 	rm -rf step/*
 	mkdir -p stl
 	mkdir -p step
+	mkdir -p stl/variants
+	mkdir -p step/variants
 
 stl: clean b123d blend
 

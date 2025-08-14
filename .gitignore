@@ -1,9 +1,7 @@
 *.blend1
 backup/
 stl/
-step/
-3mf/
-release/
-blender/render/
+prusa/
+orca/
 .vscode/
 __pycache__/

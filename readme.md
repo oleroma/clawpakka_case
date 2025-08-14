@@ -15,6 +15,8 @@ Mod of original Alpakka 1.0 with special R1L1, R2L2 and R4L4 all front facing bu
 <span><img width='250px' src='./preview/side.png'/></span>
 <span><img width='250px' src='./preview/diagonal1.png'/></span>
 <span><img width='250px' src='./preview/diagonal2.png'/></span>
+<span><img width='250px' src='./preview/transparent1.png'/></span>
+<span><img width='250px' src='./preview/transparent2.png'/></span>
 <br>*(Previews might be outdated)*
 
 ## Dependencies

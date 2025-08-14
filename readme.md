@@ -1,12 +1,11 @@
-# Alpakka 3D-print
+# CLAWPAKKA 1.0
 
-*Clawpakka controller 3D-printed case and buttons (reference designs)*
-Mod of original Alpakka 1.0 with special all-front facing buttons
+Mod of original Alpakka 1.0 with special R1L1, R2L2 and R4L4 all front facing buttons.
 ## Project links
-- [Alpakka Manual](https://inputlabs.io/devices/alpakka/manual).
+- [Alpakka Manual](https://inputlabs.io/devices/alpakka/manual). _(only original, not for this mod)_
 - [Alpakka Firmware](https://github.com/inputlabs/alpakka_firmware).
 - [Alpakka PCB](https://github.com/inputlabs/alpakka_pcb).
-- [Alpakka 3D-print](https://github.com/inputlabs/alpakka_case). _(original)_
+- [Alpakka 3D-print](https://github.com/inputlabs/alpakka_case). _(original case)_
 - [Input Labs Roadmap](https://github.com/orgs/inputlabs/projects/2/views/2).
 
 ## Previews
